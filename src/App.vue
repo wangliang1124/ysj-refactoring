@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <div class="wrapper">
+    <div class="app-wrapper">
+      <hello-world></hello-world>
       <div class="header">
         <span class="location"></span>
         <span class="search"></span>
@@ -25,26 +26,26 @@
     </div>
   </div>
 </template>
+<script type="text/javascript">
+  import HelloWorld from '@/components/HelloWorld'
 
-<script>
-export default {
-  name: 'app'
-}
+  export default {
+    name: 'app',
+    components: {
+      HelloWorld,
+    },
+  }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif
-  -webkit-font-smoothing: antialiased
-  -moz-osx-font-smoothing: grayscale
-  text-align: center
-  color: #2c3e50
-  margin-top: 60px
-}
-.wrapper {
-  margin: 0 auto;
-  width: 414px;
-  height: 736px;
-  background-color: rgba(7, 17, 27, 0.2)
-}
+<style type="text/css" lang="stylus">
+  #app 
+    font-family: 'Avenir', Helvetica, Arial, sans-serif
+    -webkit-font-smoothing: antialiased
+    -moz-osx-font-smoothing: grayscale
+    text-align: center
+    color: #2c3e50
+    margin-top: 60px
+  .app-wrapper
+    margin: 0 auto;
+    background-color: rgba(7, 17, 27, 0.2)
 </style>
