@@ -1,9 +1,8 @@
 <template>
   <div id="app">
     <div class="app-wrapper">
-      <hello-world></hello-world>
       <div class="header">
-        <span class="location"></span>
+        <span class="location">北京</span>
         <span class="search"></span>
         <span class="personal"></span>
       </div>
@@ -27,7 +26,7 @@
   </div>
 </template>
 <script type="text/javascript">
-  import HelloWorld from '@/components/HelloWorld'
+  import HelloWorld from 'components/HelloWorld'
 
   export default {
     name: 'app',
@@ -39,13 +38,12 @@
 
 <style type="text/css" lang="stylus">
   #app 
-    font-family: 'Avenir', Helvetica, Arial, sans-serif
-    -webkit-font-smoothing: antialiased
-    -moz-osx-font-smoothing: grayscale
-    text-align: center
-    color: #2c3e50
-    margin-top: 60px
-  .app-wrapper
-    margin: 0 auto;
-    background-color: rgba(7, 17, 27, 0.2)
+    .app-wrapper
+      width: 100%
+      .header
+        padding: 4px 8px
+        font-size: 0
+        .location
+          line-height: 1rem
+          font-size: 12px
 </style>
