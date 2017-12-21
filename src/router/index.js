@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from 'components/HelloWorld'
 import Home from 'components/Home'
+import FlexibleTest from 'components/FlexibleTest'
 
 Vue.use(Router)
 
@@ -15,6 +16,7 @@ export default new Router({
       meta: {
         title: 'HOME',
       },
+      beforeEnter(to, from, next) { console.log('==========home route========'); next() },
     },
     {
       path: '/hello',
@@ -28,6 +30,11 @@ export default new Router({
         console.log(HelloWorld)
         next()
       },
+    },
+    {
+      path: '/flexibletest',
+      name: 'flexibleTest',
+      component: FlexibleTest,
     },
   ],
 })
