@@ -20,7 +20,7 @@
       </div>
       <div class="content-wrapper">
         <div class="tabs">
-          <span class="tab-item">综合排序</span>
+          <span class="tab-item current">综合排序</span>
           <span class="tab-item">好评优先</span>
           <span class="tab-item">距离最近</span>
           <span class="tab-item">筛选</span>
@@ -134,11 +134,16 @@
         .tabs
           display: flex
           height: 80px
+          line-height: 80px
           border-bottom: 1px solid rgba(7, 17, 27, 0.1)
           .tab-item
             flex: 1
-            align-self: center
+            // align-self: center
             text-align: center
+            &.current
+              // border-bottom: 2px solid rgb(147,153,159); /*no*/
+              font-weight: 700
+              color: rgb(240,20,20)
         .content
           padding: 18px
           // background-color: #ccc

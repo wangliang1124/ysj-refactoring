@@ -7,7 +7,7 @@
       <h1 class="title">测试测试</h1>
       <div class="desc">享受价值99元主厨定制菜</div>
       <div class="info">
-        <span>人均</span><span>日本菜</span><span>18.9km</span>
+        <span>人均200元</span><span>日本菜</span><span>18.9km</span>
       </div>
     </div>
   </div>
@@ -55,6 +55,7 @@ export default {
         color: rgb(147,153,159)
       .info
         span
+          margin-right: 10px
           font-dpr(10px)
           color: rgb(147,153,159)
 </style>
