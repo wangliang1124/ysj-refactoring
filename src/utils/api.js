@@ -1,5 +1,7 @@
 import axios from 'axios'
-// import qs from 'qs'
+// import cookie from 'cookiejs'
+// import qs from 'qs';
+import store from '../vuex/index'
 
 const api = axios.create({
   baseURL: 'http://ysj.tcfellow.com:3000/api/v1',
@@ -9,8 +11,8 @@ const api = axios.create({
 api.interceptors.request.use((cfg) => {
   // 在发送请求之前添加验证
   const config = cfg
-  // config.headers.authorization = 'tests'
-  console.log(config)
+  config.headers.authorization = store.getters.token.id
+  // console.log(config)
   return config
 }, (error) => {
   // 请求错误时...
@@ -21,7 +23,7 @@ api.interceptors.response.use(
   response => response.data,
   (error) => {
     if (error.response && error.response.status === 401) {
-      console.log('=============授权错误！================')
+      console.log('=============没有授权！================')
     }
   },
 )

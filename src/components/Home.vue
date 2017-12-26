@@ -14,9 +14,9 @@
         </span>
       </div>
       <div class="slider">
-        <img src="../assets/img/北京.jpg" class="img" alt="">
-        <!-- <span class="button">点击购买</span> -->
-        <span class="dot"></span>
+          <img src="../assets/img/北京.jpg" class="img" alt="">
+          <!-- <span class="button">点击购买</span> -->
+          <span class="dot"></span>
       </div>
       <div class="content-wrapper">
         <div class="tabs">
@@ -48,11 +48,118 @@
 </template>
 <script>
   import RestaurantCover from 'components/RestaurantCover'
+  import api from 'utils/api'
 
   export default {
     name: 'Home',
     components: {
       RestaurantCover,
+    },
+    data() {
+      return {
+        region: ['北京', '上海'],
+        banners: [],
+        currentLocation: '北京',
+        restaurantList: [],
+        filter: {
+          scene_id: '',
+          other_id: '',
+          cuisine_id: '',
+          district_id: '',
+          city_id: '',
+          orderby: 'updated_at', // orderby: 'created_at',
+          page: 1,
+          per_page: 30, // 10->30 一次请求30个，然后多次加载
+          order: 'desc', //  order: 'asc',
+          q: '',
+          location: '', // 用户定位信息
+          filter: '',
+        },
+        loadingNum: 4, // 每次加载数量
+      }
+    },
+    computed: {
+      // 最新
+      // orderByTime() {
+
+      // },
+      // 价格
+      listOrderByPrice() {
+        return this.restaurantList.sort((a, b) => a.price - b.price)
+      },
+      // 距离
+      // orderByDistance
+      // 自定义筛选
+      // orderByCustom
+    },
+    created() {
+      console.log('===========created================')
+      this.initData()
+    },
+    methods: {
+      async initData() {
+        const area = await api.get('/area')
+        this.region = area.data.map(item => item.city)
+
+        const banners = await api.get(`/banner?intro=${this.currentLocation}`)
+        this.banners = banners.data.rows
+
+        const specialty = await api.get('/specialty', { params: this.filter })
+        console.log(specialty)
+        console.log('================首页-初始化餐厅数据===================')
+        this.restaurantList = specialty.data.rows.map(item => ({
+          cover: item.cover,
+          title: item.restaurant.name,
+          desc: item.intro,
+          price: item.restaurant.unit_average,
+          // distance: this.getDistance(item.restaurant.location_x, item.restaurant.location_y),
+          cuisine: item.restaurant.restaurant_cuisine.cuisine,
+          updatedAt: item.updated_at,
+        }))
+        console.log(this.restaurantList.sort((a, b) => b.price - a.price))
+        // eslint-disbale-next-line
+        // console.log(this.restaurantList)
+      },
+      getDistance(loX, loY) {
+        // const { locationX: loX, locationY: loY } = { locationX, locationY }
+        console.log(loX, loY)
+        const location = JSON.parse(window.localStorage.getItem('location'))
+        console.log(location)
+        if (location) {
+          const { lat, lng } = location
+          console.log(lat, lng)
+          if (!loY || !lat) {
+            return '未知'
+          }
+          // return `${(Number(util.getDistance(loY, loX, lat, lng)) / 1000).toFixed(2)}km`
+        }
+        /**
+        wxconfig.getLocation([], (res, location) => {
+          const { latitude, longitude } = location;
+          console.log(latitude, longitude);
+          return `${(Number(util.getDistance(loY, loX, latitude, longitude)) / 1000).toFixed(2)}km`;
+        });
+        */
+        return ''
+      },
+      // locate() { // 定位
+      //   const self = this
+      //   wxConfig.getLocation(list, (res, currentPlace) => {
+      //     const minPlace = res
+      //     this.filter.location = `${currentPlace.longitude},${currentPlace.latitude}`;
+      //     if (!locationId || `${minPlace.id}` !== `${locationId}`) {
+      //       const { id, city } = minPlace;
+      //       this.$vux.confirm.show({
+      //         title: `定位您在${city}附近`,
+      //         content: '是否切换到该城市进行搜索',
+      //         onConfirm() {
+      //           // localStorage.setItem('current_location', id);
+      //           self.choosePlace(id)
+      //         },
+      //       })
+      //     }
+      //   })
+      // },
     },
   }
 
