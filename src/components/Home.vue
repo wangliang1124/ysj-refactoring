@@ -49,6 +49,7 @@
 <script>
   import RestaurantCover from 'components/RestaurantCover'
   import api from 'utils/api'
+  import wx from 'utils/wx'
 
   export default {
     name: 'Home',
@@ -83,7 +84,7 @@
       // orderByTime() {
 
       // },
-      // 价格
+      // 按价格排序
       listOrderByPrice() {
         return this.restaurantList.sort((a, b) => a.price - b.price)
       },
@@ -94,7 +95,10 @@
     },
     created() {
       console.log('===========created================')
+      wx.initWx()
+      // wx.getLocation()
       this.initData()
+      this.getDistance()
     },
     methods: {
       async initData() {
@@ -122,7 +126,6 @@
       },
       getDistance(loX, loY) {
         // const { locationX: loX, locationY: loY } = { locationX, locationY }
-        console.log(loX, loY)
         const location = JSON.parse(window.localStorage.getItem('location'))
         console.log(location)
         if (location) {
@@ -133,6 +136,7 @@
           }
           // return `${(Number(util.getDistance(loY, loX, lat, lng)) / 1000).toFixed(2)}km`
         }
+
         /**
         wxconfig.getLocation([], (res, location) => {
           const { latitude, longitude } = location;

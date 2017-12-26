@@ -2,13 +2,17 @@ import qs from 'qs'
 import store from '../vuex/index'
 import api from './api'
 
-const signIn = async (to, code) => {
-  if (code) {
+const signIn = async (code) => {
+  try {
+    console.log(typeof code)
     const res = await api.post('/user/signin', {
       code,
     })
     console.log('=======login=========')
+    console.log(res)
     store.dispatch('setUser', res.data)
+  } catch (err) {
+    console.log(err.message)
   }
 }
 const oAuth = () => {

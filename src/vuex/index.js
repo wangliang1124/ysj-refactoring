@@ -66,7 +66,7 @@ const actions = {
 const mutations = {
   SET_USER(s, d) {
     s.token = {
-      id: d.token,
+      token: d.token,
       user_id: d.user_id,
     }
   },
