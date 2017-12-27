@@ -14,30 +14,26 @@
         </span>
       </div>
       <div class="slider">
-          <img src="../assets/img/北京.jpg" class="img" alt="">
+          <ul>
+            <li v-for="item in banners" class="item" :class="{active: isShowBanner}">
+              <img :src="item.url" class="img">
+            </li>
+          </ul>
           <!-- <span class="button">点击购买</span> -->
           <span class="dot"></span>
       </div>
       <div class="content-wrapper">
         <div class="tabs">
-          <span class="tab-item current">综合排序</span>
-          <span class="tab-item">好评优先</span>
-          <span class="tab-item">距离最近</span>
-          <span class="tab-item">筛选</span>
+          <ul class="tab-list">
+            <li class="tab-item"><router-link :to="{path:'/'}">综合排序</router-link></li>
+            <li class="tab-item"><router-link :to="{path:'/list/2'}">好评优先</router-link></li>
+            <li class="tab-item"><router-link :to="{path:'/list/3'}">距离最近</router-link></li>
+            <li class="tab-item"><router-link :to="{path:'/list/4'}">筛 选</router-link></li>
+          </ul>
         </div>
         <div class="content">
-          <ul class="restaurant-list">
-            <li class="restaurant-item">
-              <restaurant-cover></restaurant-cover>
-            </li>
-            <div class="split"></div>
-            <li class="restaurant-item">
-              <restaurant-cover></restaurant-cover>
-            </li>
-            <li class="restaurant-item">
-              <restaurant-cover></restaurant-cover>
-            </li>
-          </ul>
+          <!-- <restaurant-list :restaurantList="restaurantList"></restaurant-list> -->
+          <router-view :restaurantList="restaurantList"></router-view>
         </div>
       </div>
       <div class="footer">
@@ -47,21 +43,24 @@
   </div>
 </template>
 <script>
-  import RestaurantCover from 'components/RestaurantCover'
+  import RestaurantList from 'components/RestaurantList'
   import api from 'utils/api'
-  import wx from 'utils/wx'
+  import util from 'utils/location'
+  // import wx from 'utils/wx'
 
   export default {
     name: 'Home',
     components: {
-      RestaurantCover,
+      RestaurantList,
     },
     data() {
       return {
         region: ['北京', '上海'],
         banners: [],
+        isShowBanner: true,
         currentLocation: '北京',
         restaurantList: [],
+        list: [],
         filter: {
           scene_id: '',
           other_id: '',
@@ -70,7 +69,7 @@
           city_id: '',
           orderby: 'updated_at', // orderby: 'created_at',
           page: 1,
-          per_page: 30, // 10->30 一次请求30个，然后多次加载
+          per_page: 50, // 10->30 一次请求30个，然后多次加载
           order: 'desc', //  order: 'asc',
           q: '',
           location: '', // 用户定位信息
@@ -80,71 +79,90 @@
       }
     },
     computed: {
-      // 最新
-      // orderByTime() {
-
+      // list() {
+      //   return this.restaurantList
       // },
       // 按价格排序
       listOrderByPrice() {
-        return this.restaurantList.sort((a, b) => a.price - b.price)
+        // const list = this.restaurantList.concat() // 复制array，避免引用
+        return this.restaurantList.sort((a, b) => b.price - a.price)
       },
       // 距离
-      // orderByDistance
-      // 自定义筛选
-      // orderByCustom
+      listOrderByDistance() {
+        // const list = this.restaurantList.concat()
+        return this.restaurantListlist.sort((a, b) => a.distance - b.distance)
+      },
+    },
+    beforeRouteUpdate(to, from, next) {
+      // console.log(to, from)
+      const id = parseInt(to.params.id, 10)
+      console.log('=====测试mounted=====' + id)
+      // console.log(to.params)
+      switch (id) {
+        case 'NaN':
+          // this.restaurantList.sort((a, b) => b.updatedAt - a.updatedAt)
+          // console.log(this.list)
+          break
+        case 2:
+          this.restaurantList.sort((a, b) => b.price - a.price)
+          // this.list = this.listOrderByPrice
+          // console.log(this.listOrderByPrice)
+          break
+        case 3:
+          this.restaurantList.sort((a, b) => a.distance - b.distance)
+          // this.list = this.listOrderByDistance
+          // console.log(this.list)
+          break
+        default:
+          this.restaurantList.sort((a, b) => b.updatedAt - a.updatedAt)
+      }
+      next()
     },
     created() {
-      console.log('===========created================')
-      wx.initWx()
-      // wx.getLocation()
+      console.log('===========Home created================')
       this.initData()
-      this.getDistance()
     },
     methods: {
       async initData() {
-        const area = await api.get('/area')
-        this.region = area.data.map(item => item.city)
+        try {
+          const area = await api.get('/area')
+          this.region = area.data.map(item => item.city)
 
-        const banners = await api.get(`/banner?intro=${this.currentLocation}`)
-        this.banners = banners.data.rows
+          const banners = await api.get(`/banner?intro=${this.currentLocation}`)
+          this.banners = banners.data.rows
+          console.log(this.banners)
 
-        const specialty = await api.get('/specialty', { params: this.filter })
-        console.log(specialty)
-        console.log('================首页-初始化餐厅数据===================')
-        this.restaurantList = specialty.data.rows.map(item => ({
-          cover: item.cover,
-          title: item.restaurant.name,
-          desc: item.intro,
-          price: item.restaurant.unit_average,
-          // distance: this.getDistance(item.restaurant.location_x, item.restaurant.location_y),
-          cuisine: item.restaurant.restaurant_cuisine.cuisine,
-          updatedAt: item.updated_at,
-        }))
-        console.log(this.restaurantList.sort((a, b) => b.price - a.price))
-        // eslint-disbale-next-line
-        // console.log(this.restaurantList)
+          const specialty = await api.get('/specialty')
+          if (specialty) {
+            console.log('================首页-初始化餐厅数据===================')
+            // console.log(specialty.data.rows)
+            this.restaurantList = specialty.data.rows.map(item => ({
+              cover: item.cover,
+              title: item.restaurant.name,
+              desc: item.name,
+              price: item.restaurant.unit_average,
+              distance: this.getDistance(item.restaurant.location_x, item.restaurant.location_y),
+              cuisine: item.restaurant.restaurant_cuisine.cuisine,
+              updatedAt: item.updated_at,
+            }))
+          }
+          console.log(this.restaurantList)
+        } catch (err) {
+          console.log(`初始化餐厅数据错误${err.message}`)
+        }
       },
       getDistance(loX, loY) {
-        // const { locationX: loX, locationY: loY } = { locationX, locationY }
         const location = JSON.parse(window.localStorage.getItem('location'))
-        console.log(location)
         if (location) {
-          const { lat, lng } = location
-          console.log(lat, lng)
-          if (!loY || !lat) {
-            return '未知'
-          }
-          // return `${(Number(util.getDistance(loY, loX, lat, lng)) / 1000).toFixed(2)}km`
+          const { latitude: lat, longitude: lng } = location
+          return Math.round(util.getDistance(loY, loX, lat, lng) / 100) / 10
         }
-
-        /**
-        wxconfig.getLocation([], (res, location) => {
-          const { latitude, longitude } = location;
-          console.log(latitude, longitude);
-          return `${(Number(util.getDistance(loY, loX, latitude, longitude)) / 1000).toFixed(2)}km`;
-        });
-        */
-        return ''
+        return '未知'
+      },
+      showBanner() {
+        setTimeout(() => {
+          // this.banners.show = false
+        }, 1000)
       },
       // locate() { // 定位
       //   const self = this
@@ -230,43 +248,38 @@
       .slider
         position: relative
         font-size: 0
-        .img
-          width: 100%
-        .dot
-          display: inline-block
-          position: absolute
-          right: 20px
-          bottom: 20px
-          width: 12px
-          height: 12px
-          border-radius: 50%
-          background-color: #fff
+        .item
+          display: none
+          .img
+            width: 100%
+          .dot
+            display: inline-block
+            position: absolute
+            right: 20px
+            bottom: 20px
+            width: 12px
+            height: 12px
+            border-radius: 50%
+            background-color: #fff
+          &.active
+            display: block
       .content-wrapper
         .tabs
-          display: flex
-          height: 80px
-          line-height: 80px
-          border-bottom: 1px solid rgba(7, 17, 27, 0.1)
-          .tab-item
-            flex: 1
-            // align-self: center
-            text-align: center
-            &.current
-              // border-bottom: 2px solid rgb(147,153,159); /*no*/
-              font-weight: 700
-              color: rgb(240,20,20)
+          .tab-list
+            display: flex
+            height: 80px
+            line-height: 80px
+            border-bottom: 1px solid rgba(7, 17, 27, 0.1)
+            .tab-item
+              flex: 1
+              // align-self: center
+              text-align: center
+              a
+                display: block
+                color: rgb(77, 85, 93)
+                &.router-link-exact-active
+                  color: rgb(240, 20, 20)
         .content
           padding: 18px
-          // background-color: #ccc
-          .restaurant-list
-            display: flex
-            flex-flow: row wrap
-            font-size: 0
-            .restaurant-item
-              flex: 0 0 49%
-              width: 49%
-              margin-bottom: 20px
-            .split
-              flex: 0 0 2%
-              width: 2%
+
 </style>

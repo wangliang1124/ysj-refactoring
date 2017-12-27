@@ -4,7 +4,7 @@
   </div>
 </template>
 <script type="text/javascript">
-  // import wx from 'utils/wx'
+  import wx from 'utils/wx'
   // import api from 'utils/api'
 
   export default {
@@ -31,7 +31,8 @@
     created() {
       console.log('===========App created================')
       // this.initData()
-      // wx.initWx()
+      wx.initWx()
+      wx.getLocation()
     },
     methods: {
       // async initData() {

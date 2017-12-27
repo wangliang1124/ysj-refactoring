@@ -1,13 +1,13 @@
 <template>
   <div class="restaurant-cover">
     <div class="cover">
-      <img src="../assets/img/8.jpg" class="img">
+      <img :src="restaurant.cover" class="img">
     </div>
     <div class="text">
-      <h1 class="title">测试测试</h1>
-      <div class="desc">享受价值99元主厨定制菜</div>
+      <h1 class="title">{{restaurant.title}}</h1>
+      <div class="desc">{{restaurant.desc}}</div>
       <div class="info">
-        <span>人均200元</span><span>日本菜</span><span>18.9km</span>
+        <span>人均￥{{restaurant.price}}</span><span>{{restaurant.cuisine}}</span><span>{{restaurant.distance}}km</span>
       </div>
     </div>
   </div>
@@ -17,7 +17,11 @@
 export default {
 
   name: 'RestaurantCover',
-
+  props: {
+    restaurant: {
+      type: Object,
+    },
+  },
   data() {
     return {
 

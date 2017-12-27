@@ -3,8 +3,8 @@
  */
 // import location from './location'
 import api from './api'
-// eslint-disable-next-line
-const wx = window.wx
+
+
 // const getMinPlace = (list, res) => {
 //   let minD = -1
 //   let minPlace = {}
@@ -22,11 +22,11 @@ const wx = window.wx
 //   })
 //   return minPlace
 // }
-
-const wxConfig = {
+const wx = window.jWeixin
+const wxAPI = {
   async initWx() {
     const config = await api.get('/wx/signature', {
-      params: { url: encodeURIComponent(window.location.href.split('#')[0]) },
+      params: { url: window.location.href.split('#')[0] },
     })
     const d = config.data
     wx.config({
@@ -110,4 +110,4 @@ const wxConfig = {
   },
 }
 
-export default wxConfig
+export default wxAPI

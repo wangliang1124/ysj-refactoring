@@ -4,6 +4,7 @@ import cookie from 'cookiejs'
 import { signIn, oAuth } from 'utils/auth'
 import HelloWorld from 'components/HelloWorld'
 import Home from 'components/Home'
+import RestaurantList from 'components/RestaurantList'
 import FlexibleTest from 'components/FlexibleTest'
 
 Vue.use(Router)
@@ -11,11 +12,24 @@ const routes = [
   {
     path: '/',
     component: Home,
-    name: 'home',
+    // name: 'home',
+    // redirect: '/list/1',
     meta: {
       title: 'HOME',
       requiresAuth: true,
     },
+    children: [
+      {
+        path: '',
+        component: RestaurantList,
+      },
+      {
+        path: 'list/:id',
+        // redirect: '/list/1',
+        name: 'list',
+        component: RestaurantList,
+      },
+    ],
   },
   {
     path: '/hello',
