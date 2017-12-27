@@ -2,8 +2,11 @@
   <div class="home">
     <div class="home-wrapper">
       <div class="header">
-        <span class="location">
-          <span>北京</span><i class="iconfont icon-arrow-down"></i>
+        <span class="location" @click="showCity">
+          <span>{{currentCity}}</span><i class="iconfont icon-arrow-down"></i>
+          <ul class="city-list" v-show="cityShow">
+            <li class="city" v-for="(city,index) in cities" @click.stop="selectCity(index)">{{city}}</li>
+          </ul>
         </span>
         <span class="search-wrapper">
           <i class="iconfont icon-search"></i>
@@ -55,7 +58,9 @@
     },
     data() {
       return {
-        region: ['北京', '上海'],
+        currentCity: '北京',
+        cities: ['北京', '上海'],
+        cityShow: false,
         banners: [],
         isShowBanner: true,
         currentLocation: '北京',
@@ -79,9 +84,6 @@
       }
     },
     computed: {
-      // list() {
-      //   return this.restaurantList
-      // },
       // 按价格排序
       listOrderByPrice() {
         // const list = this.restaurantList.concat() // 复制array，避免引用
@@ -100,18 +102,13 @@
       // console.log(to.params)
       switch (id) {
         case 'NaN':
-          // this.restaurantList.sort((a, b) => b.updatedAt - a.updatedAt)
-          // console.log(this.list)
+          this.restaurantList.sort((a, b) => b.updatedAt - a.updatedAt)
           break
         case 2:
           this.restaurantList.sort((a, b) => b.price - a.price)
-          // this.list = this.listOrderByPrice
-          // console.log(this.listOrderByPrice)
           break
         case 3:
           this.restaurantList.sort((a, b) => a.distance - b.distance)
-          // this.list = this.listOrderByDistance
-          // console.log(this.list)
           break
         default:
           this.restaurantList.sort((a, b) => b.updatedAt - a.updatedAt)
@@ -126,7 +123,7 @@
       async initData() {
         try {
           const area = await api.get('/area')
-          this.region = area.data.map(item => item.city)
+          this.cities = area.data.map(item => item.city)
 
           const banners = await api.get(`/banner?intro=${this.currentLocation}`)
           this.banners = banners.data.rows
@@ -158,6 +155,13 @@
           return Math.round(util.getDistance(loY, loX, lat, lng) / 100) / 10
         }
         return '未知'
+      },
+      showCity() {
+        this.cityShow = !this.cityShow
+      },
+      selectCity(index) {
+        this.currentCity = this.cities[index]
+        this.cityShow = false
       },
       showBanner() {
         setTimeout(() => {
@@ -192,10 +196,11 @@
     .home-wrapper
       width: 100%
       .header
+        position: relative
         display: flex
         height: 96px
         line-height: 96px
-        margin: 8px 16px
+        padding: 8px 16px
         font-size: 0
         text-align: center
         // background: rgba(7, 17, 27, 0.2)
@@ -209,6 +214,22 @@
             vertical-align: middle
             font-dpr(20px)
             color: rgba(7, 17, 27, 0.5)
+        .city-list
+          position: absolute
+          display: flex
+          flex-flow: column nowrap
+          z-index: 10
+          top: 80px
+          left: 0
+          width: 120px
+          margin-left: 4px
+          border-radius: 4px
+          .city
+            flex: 1
+            border-bottom: 1px solid rgba(7, 17, 27, 0.1)
+            background-color: #f3f5f7
+            &:last-child
+              border-bottom: 0
         .search-wrapper
           position: relative
           display: flex
@@ -249,9 +270,17 @@
         position: relative
         font-size: 0
         .item
-          display: none
+          // display: none
+          position: relative
+          width: 100%
+          height: 0
+          padding-top: 56.25% /*黑魔法*/
           .img
+            position: absolute
+            top: 0
+            bottom: 0
             width: 100%
+            height: 100%
           .dot
             display: inline-block
             position: absolute
