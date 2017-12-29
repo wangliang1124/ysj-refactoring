@@ -11,6 +11,7 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "alloyfinger": "^0.1.10",
     "axios": "^0.17.1",
     "better-scroll": "^1.5.4",
     "cookiejs": "^1.0.13",

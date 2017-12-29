@@ -7,13 +7,14 @@ import Home from 'components/Home'
 import RestaurantList from 'components/RestaurantList'
 import FlexibleTest from 'components/FlexibleTest'
 
+const RestaurantDetail = () => import('components/RestaurantDetail')
+
 Vue.use(Router)
 const routes = [
   {
     path: '/',
     component: Home,
     // name: 'home',
-    // redirect: '/list/1',
     meta: {
       title: 'HOME',
       requiresAuth: true,
@@ -22,14 +23,23 @@ const routes = [
       {
         path: '',
         component: RestaurantList,
+        meta: {
+          title: 'HOME',
+        },
       },
       {
         path: 'list/:id',
-        // redirect: '/list/1',
         name: 'list',
         component: RestaurantList,
       },
     ],
+  },
+  {
+    path: '/detail',
+    component: RestaurantDetail,
+    meta: {
+      title: '餐厅详情',
+    },
   },
   {
     path: '/hello',
@@ -61,11 +71,13 @@ router.beforeEach(async (to, from, next) => {
 
     if (code) { // 是否已经获取微信授权code，如果获取则登陆
       signIn(code)
+      document.title = to.meta.title
       next()
     } else { // 否则去获取授权
       oAuth()
     }
   } else { // 否则直接进入页面
+    document.title = to.meta.title
     next()
   }
 })
