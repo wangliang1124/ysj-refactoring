@@ -153,7 +153,7 @@
           }
           console.log(this.restaurantList)
         } catch (err) {
-          console.log(`初始化餐厅数据错误${err.message}`)
+          console.log(`初始化餐厅数据错误:${err.message}`)
         }
       },
       getDistance(loX, loY) {
