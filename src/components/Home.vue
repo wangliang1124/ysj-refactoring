@@ -272,7 +272,7 @@
           top: 96px
           left: 0
           width: 100%
-          line-height: 96px
+          line-height: 98px
           text-align: center
           border-radius: 4px
           &.drop-enter-active, &.drop-leave-active
@@ -281,8 +281,9 @@
             opacity: 0
             transform: translateY(-100%)
           .city-item
-            flex: 1
-            font-size: 12px
+            flex-grow: 1
+            flex-shrink: 1
+            flex-basis: auto
             background-color: #fff
             .city
               display: inline-block

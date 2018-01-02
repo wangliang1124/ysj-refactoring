@@ -29,6 +29,9 @@ export default {
   props: {
     imageList: {
       type: Array,
+      // default: [{
+      //   url: '../assets/img/8.jpg',
+      // }],
     },
   },
   data() {

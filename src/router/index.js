@@ -17,7 +17,7 @@ const routes = [
     // name: 'home',
     meta: {
       title: 'HOME',
-      requiresAuth: true,
+      requiresAuth: false,
     },
     children: [
       {

@@ -14,6 +14,7 @@ api.interceptors.request.use(
     // const config = cfg
     // eslint-disable-next-line
     config.headers.authorization = store.getters.token.id
+    // console.log(config)
     return config
   },
   (error) => {
