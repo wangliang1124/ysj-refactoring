@@ -32,13 +32,19 @@
             // console.log(specialty.data.rows)
             this.restaurantList = specialty.data.rows.map(item => ({
               id: item.id,
-              cover: item.cover,
-              photos: item.restaurant.restaurant_imgs,
               title: item.restaurant.name,
               desc: item.name,
               price: item.restaurant.unit_average,
               distance: this.getDistance(item.restaurant.location_x, item.restaurant.location_y),
               cuisine: item.restaurant.restaurant_cuisine.cuisine,
+              cover: item.cover,
+              photos: item.restaurant.restaurant_imgs,
+              address: item.restaurant.address,
+              district: item.restaurant.restaurant_district.district,
+              tags: JSON.parse(item.restaurant.icons),
+              chefName: item.cook_name,
+              chefIntro: item.cook_intro,
+              chefAvatar: item.cook_avatar,
               updatedAt: item.updated_at,
             }))
           }

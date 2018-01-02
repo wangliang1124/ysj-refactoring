@@ -35,7 +35,7 @@ const routes = [
     ],
   },
   {
-    path: '/detail',
+    path: '/detail/:id',
     component: RestaurantDetail,
     meta: {
       title: '餐厅详情',
