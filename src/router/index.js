@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import cookie from 'cookiejs'
 import { signIn, oAuth } from 'utils/auth'
-import HelloWorld from 'components/HelloWorld'
+import User from 'components/User'
 import Home from 'components/Home'
 import RestaurantList from 'components/RestaurantList'
 import FlexibleTest from 'components/FlexibleTest'
@@ -42,11 +42,11 @@ const routes = [
     },
   },
   {
-    path: '/hello',
-    component: HelloWorld,
-    name: 'hello',
+    path: '/user',
+    component: User,
+    name: 'user',
     meta: {
-      title: 'hello',
+      title: '个人中心',
     },
   },
   {
