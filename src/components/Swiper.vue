@@ -114,6 +114,7 @@ export default {
           bottom: 0
           width: 100%
           height: 100%
+          object-fit: cover  /*裁剪超出比例部分，防止图片变形*/
         &.swipe-left-enter-active, &.swipe-left-leave-active,
         &.swipe-right-enter-active, &.swipe-right-leave-active
           transition: all .5s ease

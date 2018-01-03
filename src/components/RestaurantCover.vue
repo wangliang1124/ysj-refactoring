@@ -47,6 +47,7 @@ export default {
         bottom: 0
         width: 100%
         height: 100%
+        object-fit: cover /*裁剪超出比例部分，防止图片变形*/
     .text
       font-size: 0
       line-height:1.5
