@@ -95,7 +95,7 @@ const wxAPI = {
       })
     })
   },
-  openSao(callback) {
+  openScanQRCode(callback) {
     wx.ready(() => {
       wx.scanQRCode({
         needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，

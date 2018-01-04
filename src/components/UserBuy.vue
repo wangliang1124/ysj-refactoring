@@ -10,33 +10,31 @@
     </ul>
     <split></split>
     <div class="coupon">
-      <i class="iconfont icon-youhuiquan"></i><span>玥享卷</span>
+      <i class="iconfont icon-youhuiquan"></i><span class="text">玥享卷</span>
     </div>
     <split></split>
     <div class="fee">
       <span>合计：</span>
       <span class="total">￥{{totalPrice}}</span>
-
-      <span class="has-code">
-        我有激活码
-      </span>
+      <span class="has-code" @click="showActive">我有激活码</span>
     </div>
     <split></split>
-    <div class="pay" :class="{active: actived}">立即购买</div>
-    <div class="active-code" v-show="showActive">
+    <div class="pay" :class="{active: isPay}">立即购买</div>
+    <div class="active-code" v-show="isShowActive">
       <h1 class="title">会员卡激活</h1>
       <div class="content">
         <span class="code">1111222233334444</span><img class="scan" @click="openScan" src="../assets/img/scan.png">
       </div>
       <div class="btn-wrapper">
-        <span class="btn">取消</span><span class="btn active">激活</span>
+        <span class="btn" @click="hideActive">取消</span><span class="btn active" @click="doActive">激活</span>
       </div>
     </div>
-    <div class="musk"></div>
+    <div class="musk" v-show="isShowActive" @click="hideActive"></div>
   </div>
 </template>
 <script>
   import api from 'utils/api'
+  import wx from 'utils/wx'
   import UserBuyCard from 'components/UserBuyCard'
   import Split from 'components/Split'
 
@@ -51,8 +49,8 @@
         cardList: [],
         selected: 99,
         totalPrice: 0,
-        actived: false,
-        showActive: true,
+        isPay: false,
+        isShowActive: false,
       }
     },
     created() {
@@ -69,6 +67,25 @@
         this.selected = index
         this.actived = true
         this.totalPrice = this.cardList[index].price_unit
+      },
+      showActive() {
+        this.isShowActive = true
+      },
+      hideActive() {
+        this.isShowActive = false
+      },
+      doActive() {
+
+      },
+      openScan() {
+        wx.openScanQRCode((url) => {
+          console.log(url)
+          url.split('?')[1].split('&').forEach((q) => {
+            if (q.startsWith('code=')) {
+              this.actCode = q.split('=')[1].substr(5) // 去掉xxxxx
+            }
+          })
+        })
       },
     },
   }
@@ -90,8 +107,11 @@
     .coupon
       padding: 24px 36px
       .icon-youhuiquan
-        // vertical-align: middle
+        vertical-align: middle
         font-dpr(18px)
+      .text
+        margin-left: 8px
+        vertical-align: middle
     .fee
       padding: 24px 36px
       .total
@@ -157,6 +177,7 @@
           &.active
             color: rgb(7, 17, 27)
             border: 1px solid rgb(240, 20, 20)
+            // color: rgb(240, 20, 20)
           &:last-child
             margin-right: 0px
     .musk
