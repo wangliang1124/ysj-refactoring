@@ -188,6 +188,7 @@
           margin-top: 20px
           line-height: 14px
           font-dpr(14px)
+          font-weight: 700
           color: rgb(7, 17, 27)
         .avatar
           margin-top: 20px
@@ -207,7 +208,7 @@
           padding: 6px 8px 0 8px
           line-height: 2
           font-dpr(12px)
-          color: rgb(77, 85, 93)
+          color: rgb(147,153,159)
       .super
         padding: 20px
         .link
@@ -233,6 +234,7 @@
               text-align: center
               color: rgb(7, 17, 27)
             em
+              color: rgb(7, 17, 27)
               font-weight: 700
           img
             width: 100%

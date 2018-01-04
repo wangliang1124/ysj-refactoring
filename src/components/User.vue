@@ -1,53 +1,40 @@
 <template>
   <div class="user">
-    <div class="user-wrapper">
-      <div class="header">
-        <div class="person">
-          <h1 class="name">
-            姓名
-          </h1>
-          <span class="edit">编辑个人资料</span>
-        </div>
-        <div class="avatar">
-          <img src="" alt="">
-        </div>
-      </div>
-      <div class="content-wrapper">
-        <ul class="content">
-          <li class="item" v-for="item in list">
-            <!-- <a href="">{item.title} </a> -->
-            <router-link :to="item.path">{{item.title}}</router-link>
-          </li>
-        </ul>
-      </div>
+    <div class="main-wrapper">
+      <router-view></router-view>
+    </div>
+    <div class="footer">
+      <span>@玥食记</span>
     </div>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'HelloWorld',
-  data() {
-    return {
-      msg: 'Welcome to Your Vue.js App',
-      list: [
-        { title: '购买会员', path: '/buy' },
-        { title: '我的玥享卡', path: '/card' },
-        { title: '我的订单', path: '/order' },
-        { title: '玥享卷', path: '/coupon' },
-        { title: '邀请好友', path: '/share' },
-        { title: '我的收藏', path: '/favorite' },
-      ],
-      test: '',
-    }
-  },
-}
+  export default {
+    name: 'User',
+  }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="stylus" scoped>
+  // @import '../assets/stylus/mixin.styl' 
   .user
-    h1
-      font-size: 30px
-      color: red
+    position: fixed
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    overflow: auto
+    padding: 36px
+    box-sizing: border-box
+    // background: #ccc
+    .main-wrapper
+      min-height: 100%
+      // background: #cc0
+      box-sizing: border-box
+      padding-bottom: 36px
+    .footer
+      position: relative
+      margin: -36px auto 0 auto
+      text-align: center 
+      color: rgb(147,153,159)
 </style>

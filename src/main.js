@@ -7,6 +7,7 @@ import App from './App'
 import router from './router'
 
 require('./assets/fonts/iconfont.css')
+// require('./assets/stylus/mixin.styl')
 
 Vue.config.productionTip = false
 
