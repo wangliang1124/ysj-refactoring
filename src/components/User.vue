@@ -4,7 +4,7 @@
       <router-view></router-view>
     </div>
     <div class="footer">
-      <span>@玥食记</span>
+      <span>购买即视为同意&nbsp;&nbsp;</span><span>@玥食记</span><span><router-link to="/aboutus">免责声明</router-link></span>
     </div>
   </div>
 </template>
@@ -24,7 +24,7 @@
     width: 100%
     height: 100%
     overflow: auto
-    padding: 36px
+    // padding: 36px
     box-sizing: border-box
     // background: #ccc
     .main-wrapper

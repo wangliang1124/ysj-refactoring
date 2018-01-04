@@ -59,6 +59,7 @@
   @import '../assets/stylus/mixin.styl'
 
   .mycard
+    padding: 36px
     .title
       line-height: 2
       text-align: center

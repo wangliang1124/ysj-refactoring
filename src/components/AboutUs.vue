@@ -28,6 +28,7 @@
 </script>
 <style type="text/css" lang="stylus" scoped>
   .about-us
+    padding: 36px
     .content
       .text
         margin: 20px 0
