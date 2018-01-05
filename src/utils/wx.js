@@ -59,6 +59,15 @@ const wxAPI = {
       })
     })
   },
+  getAddress(callback) {
+    wx.ready(() => {
+      wx.openAddress({
+        success(address) {
+          callback(address)
+        },
+      })
+    })
+  },
   // chooseImage(callback, callback2) {
   //   wx.ready(() => {
   //     wx.chooseImage({
@@ -95,15 +104,17 @@ const wxAPI = {
       })
     })
   },
-  openScanQRCode(callback) {
+  openScanQRCode() {
     wx.ready(() => {
       wx.scanQRCode({
         needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
         scanType: ['qrCode', 'barCode'], // 可以指定扫二维码还是一维码，默认二者都有
         success(res) {
-          if (typeof res.resultStr === 'string') {
-            callback(res.resultStr)
-          }
+          console.log(res.resultStr)
+          // if (typeof res.resultStr === 'string') {
+          //   // callback(res.resultStr)
+          //   console.log(res.resultStr)
+          // }
         },
       })
     })
