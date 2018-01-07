@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div class="no-card" v-if='!cardList.length'>您还不是会员，没有会员卡， <router-link to="buy"><span>点击开通</span></router-link></div>
+    <div class="no-card" v-if='!cardList.length'>您还不是会员，没有会员卡， <router-link to="/card"><span>点击开通</span></router-link></div>
   </div>
 </template>
 <script>
