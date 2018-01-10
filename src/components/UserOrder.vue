@@ -2,9 +2,9 @@
   <div class="order">
     <div class="order-wrapper">
       <div class="header">
-        <span class="title" @click="select(index)" :class="{ current: index === currentIndex }" v-for="(item, index) in title">{{item}}</span>
+        <span class="title" @click="select(index)" :class="{ current: index === currentIndex }" v-for="(item, index) in tabTitle">{{item}}</span>
       </div>
-      <div class="content-wrapper">
+      <div class="content-wrapper" v-if='!!list.length'>
         <ul class="list">
           <li class="item" v-for="item in list">
             <!-- <img class="cover" src="../assets/img/card.jpg"> -->
@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      <div class="no-order" v-if='!orderList.length'>您还没有购买过会员， <router-link to="/card"><span>马上购买</span></router-link></div>
+      <div class="no-order" v-else>您还没有购买过会员， <router-link to="/card"><span>马上购买</span></router-link></div>
     </div>
   </div>
 </template>
@@ -54,7 +54,7 @@
     name: 'UserOrder',
     data() {
       return {
-        title: ['个人', '团购'],
+        tabTitle: ['个人', '团购'],
         currentIndex: 0,
         orderList: [],
         groupOrderList: [],
@@ -271,5 +271,6 @@
               &:last-child
                 border: 0
       .no-order
+        line-height: 2
         text-align: center
 </style>  

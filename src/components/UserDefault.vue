@@ -27,12 +27,12 @@
 
 <script>
   export default {
-    name: 'HelloWorld',
+    name: 'UserDefault',
     data() {
       return {
         msg: 'Welcome to Your Vue.js App',
         list: [
-          { title: '购买会员', path: '/user/buy', icon: 'icon-IKsuHWPb' },
+          { title: '购买会员', path: '/card', icon: 'icon-IKsuHWPb' },
           { title: '我的玥享卡', path: '/user/mycard', icon: 'icon-hsuEXGPzpb' },
           { title: '我的订单', path: '/user/order', icon: 'icon-WechatIMG' },
           { title: '玥享卷', path: '/user/coupon', icon: 'icon-XqwxLVIJhm' },
@@ -82,5 +82,5 @@
             color: rgba(7,17,27, 0.8)
             .iconfont
               float: right
-              font-dpr(28px)          
+              font-dpr(24px)          
 </style>

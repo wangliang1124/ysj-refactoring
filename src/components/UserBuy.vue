@@ -55,7 +55,7 @@
 </template>
 <script>
   import api from 'utils/api'
-  import wx from 'utils/wx'
+  import wxAPI from 'utils/wx'
   import UserBuyCard from 'components/UserBuyCard'
   import UserBuyCardActive from 'components/UserBuyCardActive'
   import Split from 'components/Split'
@@ -148,7 +148,7 @@
         }, 1000)
       },
       openScan() {
-        wx.openScanQRCode()
+        wxAPI.openScanQRCode()
       },
       emptyText() {
         this.actCode = ''
@@ -168,7 +168,7 @@
           return
         }
         const _this = this // 必须的
-        wx.getAddress(async (address) => {
+        wxAPI.getAddress(async (address) => {
           if (address.errMsg === 'openAddress:ok') {
             const param = {
               count: 1,

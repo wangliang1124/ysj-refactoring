@@ -11,7 +11,7 @@
             <input type="input" class="search-input" placeholder="search">
           </span>
           <span class="personal">
-            <i class="iconfont icon-user"></i>
+            <router-link to="/user"><i class="iconfont icon-user"></i></router-link>
           </span>
         </div>
         <transition name="drop">
