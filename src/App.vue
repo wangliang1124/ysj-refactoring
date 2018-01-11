@@ -26,6 +26,7 @@
         try {
           const specialty = await api.get('/specialty')
           console.log('================app-初始化餐厅数据===================')
+
           console.log(specialty)
           if (specialty) {
             console.log('================首页-初始化餐厅数据===================')

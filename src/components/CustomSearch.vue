@@ -10,13 +10,18 @@
     </div>
     <div class="warning">{{inputWarning}}</div>
     <div class="content-wrapper">
-      <div class="content" v-for="title in filterTitle">
-        <h2 class="filter-title">{{title}}</h2>
+      <div class="content" v-for="query in queryList">
+        <h2 class="filter-title">{{query.title}}</h2>
         <ul class="filter-list">
-          <li class="filter-item" :class="{selected: selected}" @click="selectItem">测试</li> <li class="filter-item">测试</li> <li class="filter-item">测试</li>
+          <li class="filter-item" 
+            :class="{selected: selected}" 
+            @click="selectItem"
+            v-for="item in query.list"
+          >{{item}}</li> 
+<!--           <li class="filter-item">测试</li> <li class="filter-item">测试</li>
           <li class="filter-item">测试</li> <li class="filter-item">测试</li> <li class="filter-item">测试</li>
           <li class="filter-item">测试</li> <li class="filter-item">测试</li> <li class="filter-item">测试</li>
-          <li class="filter-item">测试</li> <li class="filter-item">测试</li> <li class="filter-item">测试</li>
+          <li class="filter-item">测试</li> <li class="filter-item">测试</li> <li class="filter-item">测试</li> -->
         </ul>
       </div>
       <div class="btn"><span class="cancel" @click="showHome">取消</span><span class="confirm">确认</span></div>
@@ -24,6 +29,7 @@
   </div>
 </template>
 <script>
+import api from 'utils/api'
 import Split from 'components/Split'
 
 export default {
@@ -33,6 +39,11 @@ export default {
   },
   data() {
     return {
+      queryList: [],
+      districtList: [],
+      cuisineList: [],
+      sceneList: [],
+      otherList: [],
       inputText: '',
       inputWarning: '',
       searchRecord: [],
@@ -41,7 +52,31 @@ export default {
       selected: false,
     }
   },
+  created() {
+    this.initData()
+  },
   methods: {
+    async initData() {
+      const district = await api.get('/district?per_page=50')
+      this.districtList = { title: '商圈', list: district.data }
+      console.log(this.districtList)
+      const cuisines = await api.get('/cuisine?per_page=50')
+      this.cuisineList = cuisines.data
+      console.log(this.cuisineList)
+      const scenes = await api.get('/scene?per_page=50')
+      this.sceneList = scenes.data
+      console.log(this.sceneList)
+      const others = await api.get('/other?per_page=50')
+      this.otherList = others.data
+      console.log(this.otherList)
+      this.queryList = [
+        { title: '人均', list: ['200', '300', '400'] },
+        { title: '商圈', list: district.data.map(item => item.district) },
+        { title: '菜系', list: cuisines.data.map(item => item.cuisine) },
+        { title: '场景', list: scenes.data.map(item => item.scene) },
+        { title: '其他', list: others.data.map(item => item.other) },
+      ]
+    },
     showHome() {
       this.$router.push({ path: '/' })
     },
@@ -71,14 +106,13 @@ export default {
 <style lang="stylus" scoped>
   @import '../assets/stylus/mixin.styl'
   .query
-    position: fixed
-    top: 0
-    left: 0
-    bottom: 0
-    z-index: 100
+    // position: fixed
+    // top: 0
+    // left: 0
+    // bottom: 0
     width: 100%
     background: #fff
-    overflow: hidden
+    // overflow: hidden
     .header
       position: relative
       display: flex
@@ -145,6 +179,7 @@ export default {
             margin: 0px 8px 12px 0
             border: 1px solid rgba(7, 17, 27, 0.1)
             // border-radius: 2px
+            font-weight: 200
             background: #f3f3f3
             &.selected
               border: 1px solid rgb(240, 20, 20)

@@ -16,14 +16,14 @@
         </div>
         <transition name="drop">
           <ul class="city-list" v-show="cityShow">
-            <li class="city-item" v-for="(city,index) in cities" @click.stop="selectCity(index)">
+            <li class="city-item" v-for="(city,index) in cityList" @click.stop="selectCity(index)">
               <span class="city" :class="{current: index===currentIndex }">{{city}}</span>
             </li>
           </ul>
         </transition>
         <div class="mask" v-show="cityShow" @click="hideCityList"></div>
       </div>
-      <swiper :imageList="banners"></swiper>
+      <swiper :imageList="bannerList"></swiper>
       <div class="content-wrapper">
         <div class="tabs">
           <ul class="tab-list">
@@ -34,8 +34,8 @@
           </ul>
         </div>
         <div class="content">
-          <!-- <restaurant-list :restaurantList="restaurantList"></restaurant-list> -->
-          <router-view :restaurantList="restaurantList"></router-view>
+          <restaurant-list :restaurantList="restaurantList"></restaurant-list>
+          <!-- <router-view></router-view> -->
         </div>
       </div>
       <div class="footer">
@@ -50,7 +50,7 @@
   import Swiper from 'components/Swiper'
   // import Search from 'components/Search'
   import api from 'utils/api'
-  import util from 'utils/location'
+  // import util from 'utils/location'
   // import wx from 'utils/wx'
 
   export default {
@@ -60,14 +60,19 @@
       Swiper,
       // Search,
     },
+    props: {
+      restaurantList: {
+        type: Array,
+      },
+    },
     data() {
       return {
         currentCity: '北京',
-        cities: ['北京', '上海'],
+        cityList: ['北京', '上海'],
         cityShow: false,
         currentIndex: 0,
         searchShow: false,
-        banners: [],
+        bannerList: [],
         isShowBanner: true,
         currentLocation: '北京',
         restaurantList: [],
@@ -127,39 +132,39 @@
       async initData() {
         try {
           const area = await api.get('/area')
-          this.cities = area.data.map(item => item.city)
+          this.cityList = area.data.map(item => item.city)
 
           const banners = await api.get('/banner')
-          this.banners = banners.data.rows
-          console.log(this.banners)
+          this.bannerList = banners.data.rows
+          // console.log(this.bannerList)
 
-          const specialty = await api.get('/specialty')
-          if (specialty) {
-            console.log('================首页-初始化餐厅数据===================')
-            // console.log(specialty.data.rows)
-            this.restaurantList = specialty.data.rows.map(item => ({
-              cover: item.cover,
-              title: item.restaurant.name,
-              desc: item.name,
-              price: item.restaurant.unit_average,
-              distance: this.getDistance(item.restaurant.location_x, item.restaurant.location_y),
-              cuisine: item.restaurant.restaurant_cuisine.cuisine,
-              updatedAt: item.updated_at,
-            }))
-          }
-          console.log(this.restaurantList)
+          // const specialty = await api.get('/specialty')
+          // if (specialty) {
+          //   console.log('================首页-初始化餐厅数据===================')
+          //   // console.log(specialty.data.rows)
+          //   this.restaurantList = specialty.data.rows.map(item => ({
+          //     cover: item.cover,
+          //     title: item.restaurant.name,
+          //     desc: item.name,
+          //     price: item.restaurant.unit_average,
+          //     distance: this.getDistance(item.restaurant.location_x, item.restaurant.location_y),
+          //     cuisine: item.restaurant.restaurant_cuisine.cuisine,
+          //     updatedAt: item.updated_at,
+          //   }))
+          // }
+          // console.log(this.restaurantList)
         } catch (err) {
-          console.log(`初始化餐厅数据错误:${err.message}`)
+          console.log(`初始化数据错误:${err.message}`)
         }
       },
-      getDistance(loX, loY) {
-        const location = JSON.parse(window.localStorage.getItem('location'))
-        if (location) {
-          const { latitude: lat, longitude: lng } = location
-          return Math.round(util.getDistance(loY, loX, lat, lng) / 100) / 10
-        }
-        return '未知'
-      },
+      // getDistance(loX, loY) {
+      //   const location = JSON.parse(window.localStorage.getItem('location'))
+      //   if (location) {
+      //     const { latitude: lat, longitude: lng } = location
+      //     return Math.round(util.getDistance(loY, loX, lat, lng) / 100) / 10
+      //   }
+      //   return '未知'
+      // },
       showCity() {
         this.cityShow = !this.cityShow
       },
@@ -167,7 +172,7 @@
         this.cityShow = false
       },
       selectCity(index) {
-        this.currentCity = this.cities[index]
+        this.currentCity = this.cityList[index]
         this.cityShow = false
         this.currentIndex = index
       },
