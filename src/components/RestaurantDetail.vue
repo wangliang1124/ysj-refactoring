@@ -40,15 +40,13 @@
       </div>
       <split></split>
       <div class="chef-wrapper">
- <!--        <div class="avatar"> -->
-          <h2 class="title">主厨介绍</h2>
-          <div class="avatar">
-            <img :src="restaurant.chefAvatar">
-            <h3 class="name">{{restaurant.chefName}}</h3>
-          </div>
-          <div class="like"></div>
-          <p class="intro">{{restaurant.chefIntro}}</p>
-        <!-- </div> -->
+        <h2 class="title">主厨介绍</h2>
+        <div class="avatar">
+          <img :src="restaurant.chefAvatar">
+          <h3 class="name">{{restaurant.chefName}}</h3>
+        </div>
+        <div class="like"></div>
+        <p class="intro">{{restaurant.chefIntro}}</p>
       </div>
       <div class="rank"></div>
       <div class="notice"></div>
@@ -58,8 +56,8 @@
       </div>
       <split></split>
       <div class="detail-wrapper">
-        <div class="title">餐厅详情</div>
-        <p class="detail" v-html="detail"></p>
+        <h2 class="title">餐厅详情</h2>
+        <div class="detail" v-html="detail"></div>
       </div>
       <!-- <div class="rule" v-html="rule"></div> -->
       <!-- <div class="detail" v-html="detail"> -->

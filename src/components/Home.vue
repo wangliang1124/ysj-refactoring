@@ -6,7 +6,7 @@
           <span class="location" @click="showCity">
             <span>{{currentCity}}</span><i class="iconfont icon-arrow-down"></i>
           </span>
-          <span class="search-wrapper">
+          <span class="search-wrapper" @click="showSearch">
             <i class="iconfont icon-search"></i>
             <input type="input" class="search-input" placeholder="search">
           </span>
@@ -24,21 +24,13 @@
         <div class="mask" v-show="cityShow" @click="hideCityList"></div>
       </div>
       <swiper :imageList="banners"></swiper>
-<!--       <div class="slider">
-          <ul>
-            <li v-for="item in banners" class="item" :class="{active: isShowBanner}">
-              <img :src="item.url" class="img">
-            </li>
-          </ul>
-          <span class="dot"></span>
-      </div> -->
       <div class="content-wrapper">
         <div class="tabs">
           <ul class="tab-list">
             <li class="tab-item"><router-link :to="{path:'/'}">综合排序</router-link></li>
             <li class="tab-item"><router-link :to="{path:'/list/2'}">好评优先</router-link></li>
             <li class="tab-item"><router-link :to="{path:'/list/3'}">距离最近</router-link></li>
-            <li class="tab-item"><router-link :to="{path:'/list/4'}">筛 选</router-link></li>
+            <li class="tab-item"><router-link :to="{path:'/query'}">筛选</router-link></li>
           </ul>
         </div>
         <div class="content">
@@ -49,12 +41,14 @@
       <div class="footer">
         <div class="sticky"></div>
       </div>
+      <!-- <search></search> -->
     </div>
   </div>
 </template>
 <script>
   import RestaurantList from 'components/RestaurantList'
   import Swiper from 'components/Swiper'
+  // import Search from 'components/Search'
   import api from 'utils/api'
   import util from 'utils/location'
   // import wx from 'utils/wx'
@@ -64,6 +58,7 @@
     components: {
       RestaurantList,
       Swiper,
+      // Search,
     },
     data() {
       return {
@@ -71,6 +66,7 @@
         cities: ['北京', '上海'],
         cityShow: false,
         currentIndex: 0,
+        searchShow: false,
         banners: [],
         isShowBanner: true,
         currentLocation: '北京',
@@ -175,10 +171,8 @@
         this.cityShow = false
         this.currentIndex = index
       },
-      showBanner() {
-        setTimeout(() => {
-          // this.banners.show = false
-        }, 1000)
+      showSearch() {
+        this.$router.push({ path: '/search' })
       },
       // locate() { // 定位
       //   const self = this
@@ -236,7 +230,7 @@
             align-self: center
             height: 60px
             border: 1px solid rgba(7, 17, 27, 0.1)
-            border-radius: 10px
+            border-radius: 4px
             font-dpr(14px)
             .icon-search
               flex: 0 0 60px
@@ -320,5 +314,4 @@
                   color: rgb(240, 20, 20)
         .content
           padding: 18px
-
 </style>

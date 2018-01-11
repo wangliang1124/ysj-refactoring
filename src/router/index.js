@@ -6,6 +6,8 @@ import Home from 'components/Home'
 import RestaurantList from 'components/RestaurantList'
 import FlexibleTest from 'components/FlexibleTest'
 
+const Search = () => import('components/Search')
+const CustomSearch = () => import('components/CustomSearch')
 const RestaurantDetail = () => import('components/RestaurantDetail')
 const User = () => import('components/User')
 const UserDefault = () => import('components/UserDefault')
@@ -16,7 +18,6 @@ const UserCoupon = () => import('components/UserCoupon')
 const UserShare = () => import('components/UserShare')
 const UserFavorite = () => import('components/UserFavorite')
 const AboutUs = () => import('components/AboutUs')
-
 
 Vue.use(Router)
 const routes = [
@@ -42,6 +43,20 @@ const routes = [
         component: RestaurantList,
       },
     ],
+  },
+  {
+    path: '/search',
+    component: Search,
+    meta: {
+      title: '搜索',
+    },
+  },
+  {
+    path: '/query',
+    component: CustomSearch,
+    meta: {
+      title: '自定义搜索',
+    },
   },
   {
     path: '/detail/:id',
