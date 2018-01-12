@@ -76,10 +76,20 @@ export default {
       console.log('ccccccccccccccccccc')
       let rst = this.restaurantList
       // eslint-disable-next-line
-      for (let i in this.filters) {
-        if (this.filters[i]) {
-          console.log(this.filters[i])
-          rst = this.restaurantList.filter(item => item[i] === this.filters[i])
+      // const values = Object.values(this.filters)
+      // console.log(values.length)
+      // if (values) {
+      //   values.forEach((v) => {
+      //     rst = rst.filter(item => item === v)
+      //   })
+      // }
+      // eslint-disable-next-line
+      const keys = Object.keys(this.filters)
+      for (let i = 0; i < keys.length; i += 1) {
+        const key = keys[i]
+        if (this.filters[key]) {
+          console.log(this.filters[key])
+          rst = rst.filter(item => item[key] === this.filters[key])
         }
       }
       return rst
