@@ -3,7 +3,7 @@
  */
 // import location from './location'
 import api from './api'
-
+import store from '../vuex'
 
 // const getMinPlace = (list, res) => {
 //   let minD = -1
@@ -53,7 +53,8 @@ const wxAPI = {
       wx.getLocation({
         type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
         success(res) {
-          window.localStorage.setItem('location', JSON.stringify(res))
+          // window.localStorage.setItem('location', JSON.stringify(res))
+          store.dispatch('setLocation', res)
           // callback(getMinPlace(list, res), res)
         },
       })

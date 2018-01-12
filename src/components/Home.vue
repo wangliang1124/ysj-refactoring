@@ -30,12 +30,13 @@
             <li class="tab-item"><router-link :to="{path:'/'}">综合排序</router-link></li>
             <li class="tab-item"><router-link :to="{path:'/list/2'}">好评优先</router-link></li>
             <li class="tab-item"><router-link :to="{path:'/list/3'}">距离最近</router-link></li>
-            <li class="tab-item"><router-link :to="{path:'/query'}">筛选</router-link></li>
+            <li class="tab-item"><router-link :to="{path:'/custom'}">筛选</router-link></li>
           </ul>
         </div>
         <div class="content">
-          <restaurant-list :restaurantList="restaurantList"></restaurant-list>
-          <!-- <router-view></router-view> -->
+          <router-view></router-view> 
+          <!-- <restaurant-list :restaurantList="restaurantList"></restaurant-list> -->
+          <router-view :restaurantList="restaurantList"></router-view>
         </div>
       </div>
       <div class="footer">
@@ -46,24 +47,20 @@
   </div>
 </template>
 <script>
-  import RestaurantList from 'components/RestaurantList'
+  // import RestaurantList from 'components/RestaurantList'
   import Swiper from 'components/Swiper'
   // import Search from 'components/Search'
   import api from 'utils/api'
+
   // import util from 'utils/location'
   // import wx from 'utils/wx'
 
   export default {
     name: 'Home',
     components: {
-      RestaurantList,
+      // RestaurantList,
       Swiper,
       // Search,
-    },
-    props: {
-      restaurantList: {
-        type: Array,
-      },
     },
     data() {
       return {
@@ -95,6 +92,10 @@
       }
     },
     computed: {
+      // restaurantList() {
+      //   console.log('cccccccccccccccccc')
+      //   return this.$store.getters.restaurantList
+      // },
       listOrderByPrice() { // 按价格排序
         // const list = this.restaurantList.concat() // 复制array，避免引用
         return this.restaurantList.sort((a, b) => b.price - a.price)
@@ -104,19 +105,21 @@
         return this.restaurantListlist.sort((a, b) => a.distance - b.distance)
       },
     },
+    updated() {
+      this.restaurantList = this.$store.getters.restaurantList
+    },
     beforeRouteUpdate(to, from, next) {
-      // console.log(to, from)
-      const id = parseInt(to.params.id, 10)
+      const { id } = to.params
       console.log('=====测试mounted=====' + id)
       // console.log(to.params)
       switch (id) {
-        case 'NaN':
+        case '':
           this.restaurantList.sort((a, b) => b.updatedAt - a.updatedAt)
           break
-        case 2:
+        case '2':
           this.restaurantList.sort((a, b) => b.price - a.price)
           break
-        case 3:
+        case '3':
           this.restaurantList.sort((a, b) => a.distance - b.distance)
           break
         default:
@@ -136,35 +139,10 @@
 
           const banners = await api.get('/banner')
           this.bannerList = banners.data.rows
-          // console.log(this.bannerList)
-
-          // const specialty = await api.get('/specialty')
-          // if (specialty) {
-          //   console.log('================首页-初始化餐厅数据===================')
-          //   // console.log(specialty.data.rows)
-          //   this.restaurantList = specialty.data.rows.map(item => ({
-          //     cover: item.cover,
-          //     title: item.restaurant.name,
-          //     desc: item.name,
-          //     price: item.restaurant.unit_average,
-          //     distance: this.getDistance(item.restaurant.location_x, item.restaurant.location_y),
-          //     cuisine: item.restaurant.restaurant_cuisine.cuisine,
-          //     updatedAt: item.updated_at,
-          //   }))
-          // }
-          // console.log(this.restaurantList)
         } catch (err) {
           console.log(`初始化数据错误:${err.message}`)
         }
       },
-      // getDistance(loX, loY) {
-      //   const location = JSON.parse(window.localStorage.getItem('location'))
-      //   if (location) {
-      //     const { latitude: lat, longitude: lng } = location
-      //     return Math.round(util.getDistance(loY, loX, lat, lng) / 100) / 10
-      //   }
-      //   return '未知'
-      // },
       showCity() {
         this.cityShow = !this.cityShow
       },
@@ -173,6 +151,7 @@
       },
       selectCity(index) {
         this.currentCity = this.cityList[index]
+        window.localStorage.setItem('currentCity', this.currentCity)
         this.cityShow = false
         this.currentIndex = index
       },

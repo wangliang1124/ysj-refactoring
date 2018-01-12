@@ -10,13 +10,14 @@
     </div>
     <div class="warning">{{inputWarning}}</div>
     <div class="content-wrapper">
-      <div class="content" v-for="query in queryList">
-        <h2 class="filter-title">{{query.title}}</h2>
+      <div class="content" v-for="list in queryList">
+        <h2 class="filter-title">{{list.title}}</h2>
         <ul class="filter-list">
+          <li class="filter-item" :class="{selected: list.selectedIndex===null}" @click="selectAll(list)">不限</li>
           <li class="filter-item" 
-            :class="{selected: selected}" 
-            @click="selectItem"
-            v-for="item in query.list"
+            :class="{selected: index===list.selectedIndex}" 
+            @click="selectItem(list, item, index)"
+            v-for="(item,index) in list.listItem"
           >{{item}}</li> 
 <!--           <li class="filter-item">测试</li> <li class="filter-item">测试</li>
           <li class="filter-item">测试</li> <li class="filter-item">测试</li> <li class="filter-item">测试</li>
@@ -24,17 +25,22 @@
           <li class="filter-item">测试</li> <li class="filter-item">测试</li> <li class="filter-item">测试</li> -->
         </ul>
       </div>
-      <div class="btn"><span class="cancel" @click="showHome">取消</span><span class="confirm">确认</span></div>
+      <!-- <div class="btn"><span class="cancel" @click="showHome">取消</span><span class="confirm">确认</span></div> -->
+    </div>
+    <div class="result-wrapper">
+      <restaurant-list :restaurantList="result"></restaurant-list>
     </div>
   </div>
 </template>
 <script>
 import api from 'utils/api'
+import RestaurantList from 'components/RestaurantList'
 import Split from 'components/Split'
 
 export default {
   name: 'CustomSearch',
   components: {
+    RestaurantList,
     Split,
   },
   data() {
@@ -48,33 +54,85 @@ export default {
       inputWarning: '',
       searchRecord: [],
       hotSearch: ['测试1', '测试2', '测试3', '测试4', '测试5'],
-      filterTitle: ['人均', '商圈', '菜系', '场景', '其他'],
-      selected: false,
+      // filterTitle: ['人均', '商圈', '菜系', '场景', '其他'],
+      restaurantList: [],
+      filters: {
+        price: '',
+        district: '',
+        cuisine: '',
+        scene: '',
+        other: '',
+      },
+      // result: [],
     }
+  },
+  computed: {
+    // restaurantList() {
+    //   console.log('ccccccccccccdddccccccc')
+    //   console.log(this.$store.getters.restaurantList)
+    //   return this.$store.getters.restaurantList
+    // },
+    result() {
+      console.log('ccccccccccccccccccc')
+      let rst = this.restaurantList
+      // eslint-disable-next-line
+      for (let i in this.filters) {
+        if (this.filters[i]) {
+          console.log(this.filters[i])
+          rst = this.restaurantList.filter(item => item[i] === this.filters[i])
+        }
+      }
+      return rst
+    },
   },
   created() {
     this.initData()
+    // console.log(this.restaurantList)
+  },
+  updated() {
+    this.restaurantList = this.$store.getters.restaurantList
   },
   methods: {
     async initData() {
+      const currentCity = window.localStorage.getItem('currentCity')
       const district = await api.get('/district?per_page=50')
-      this.districtList = { title: '商圈', list: district.data }
-      console.log(this.districtList)
       const cuisines = await api.get('/cuisine?per_page=50')
-      this.cuisineList = cuisines.data
-      console.log(this.cuisineList)
       const scenes = await api.get('/scene?per_page=50')
-      this.sceneList = scenes.data
-      console.log(this.sceneList)
       const others = await api.get('/other?per_page=50')
-      this.otherList = others.data
-      console.log(this.otherList)
+
       this.queryList = [
-        { title: '人均', list: ['200', '300', '400'] },
-        { title: '商圈', list: district.data.map(item => item.district) },
-        { title: '菜系', list: cuisines.data.map(item => item.cuisine) },
-        { title: '场景', list: scenes.data.map(item => item.scene) },
-        { title: '其他', list: others.data.map(item => item.other) },
+        {
+          label: 'price',
+          selectedIndex: null,
+          title: '人均',
+          listItem: ['200-500', '500-1000', '1000-2000'],
+        },
+        {
+          label: 'district',
+          selectedIndex: null,
+          title: '商圈',
+          listItem: district.data
+            .filter(item => item.restaurant_area.city === currentCity)
+            .map(item => item.district),
+        },
+        {
+          label: 'cuisine',
+          selectedIndex: null,
+          title: '菜系',
+          listItem: cuisines.data.map(item => item.cuisine),
+        },
+        {
+          label: 'scene',
+          selectedIndex: null,
+          title: '场景',
+          listItem: scenes.data.map(item => item.scene),
+        },
+        {
+          label: 'other',
+          selectedIndex: null,
+          title: '其他',
+          listItem: others.data.map(item => item.other),
+        },
       ]
     },
     showHome() {
@@ -95,10 +153,22 @@ export default {
     emptyRecord() {
       this.searchRecord = []
     },
-    selectItem() {
-      this.selected = true
+    selectAll(list) {
+      this.$set(list, 'selectedIndex', null)
+      this.filters[list.label] = null
     },
-    confirm() {},
+    selectItem(list, item, index) {
+      console.log(list, item, index)
+      this.filters[list.label] = item
+      this.$set(list, 'selectedIndex', index)
+      // this.result = this.restaurantList.filter(this.custom)
+      // console.log(this.result)
+    },
+    // custom(restaurant) {
+    //   console.log('ccccccccccccccccccc')
+    //   return restaurant.district === this.filters.district ||
+    //          restaurant.cuisine === this.filters.cuisine
+    // },
   },
 }
 
@@ -167,8 +237,9 @@ export default {
       margin: 0 72px 12px 72px
       color: rgb(240, 20, 20)
     .content-wrapper
+      padding: 24px
       .content
-        margin:0 24px 24px 24px
+        // margin:0 24px 24px 24px
         .filter-title
           font-weight: 700
         .filter-list
@@ -177,14 +248,16 @@ export default {
             display: inline-block
             padding: 8px 12px
             margin: 0px 8px 12px 0
-            border: 1px solid rgba(7, 17, 27, 0.1)
+            // border: 1px solid rgba(7, 17, 27, 0.1)
             // border-radius: 2px
             font-weight: 200
             background: #f3f3f3
+            &.all
+              background: rgba(7, 17, 27, 0.2)
             &.selected
-              border: 1px solid rgb(240, 20, 20)
+              // border: 1px solid rgb(240, 20, 20)
               color: #fff
-              background: rgb(240, 20, 20)
+              background: rgb(0, 160, 220)
       .btn
         display: flex
         margin: 0 24px
@@ -196,4 +269,6 @@ export default {
         .confirm
           margin-left: 48px
           background: #f3f5f7
+    .result-wrapper
+      padding: 24px
 </style>

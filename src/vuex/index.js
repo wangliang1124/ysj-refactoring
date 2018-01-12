@@ -20,6 +20,7 @@ const state = {
     lat: '', // 纬度
     lng: '', // 经度
   },
+  restaurantList: [],
   cookTop11: [],
   rankListMonth: [],
   rankListTotal: [],
@@ -30,6 +31,7 @@ const getters = {
   userInfo: s => s.userInfo,
   vipInfo: s => s.vipInfo,
   location: s => s.location,
+  restaurantList: s => s.restaurantList,
   cookTop11: s => s.cookTop11,
   rankListMonth: s => s.rankListMonth,
   rankListTotal: s => s.rankListTotal,
@@ -51,6 +53,9 @@ const actions = {
   },
   setLocation({ commit }, d) {
     commit('SET_LOCATION', d)
+  },
+  setRestaurantList({ commit }, d) {
+    commit('SET_RESTAURANTLIST', d)
   },
   setCookTop11({ commit }, d) {
     commit('SET_COOKTOP11', d)
@@ -96,8 +101,14 @@ const mutations = {
       lat: d.latitude,
       lng: d.longitude,
     }
-    window.localStorage.setItem('location', JSON.stringify(s.location));
+    // console.log(s.location)
+    // window.localStorage.setItem('location', JSON.stringify(s.location));
     // cookie('location', JSON.stringify(s.location));
+  },
+  SET_RESTAURANTLIST(s, d) {
+    s.restaurantList = [
+      ...d,
+    ]
   },
   SET_COOKTOP11(s, d) {
     s.cookTop11 = [

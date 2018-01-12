@@ -96,6 +96,7 @@
     watch: {
       restaurantList() {
         console.log(this.restaurantList[2].icons)
+        this.restaurantList = this.$store.getters.restaurantList
         this.restaurant = this.restaurantList.find(item =>
           item.id === parseInt(this.$route.params.id, 10))
         this.imgList = this.restaurant.photos
@@ -109,6 +110,9 @@
           color: 'rgb(77, 85, 93)',
         }
       },
+      // restaurantList() {
+      //   return this.$store.getters.restaurantList
+      // },
     },
     created() {
       this.init()

@@ -5,6 +5,7 @@ import AlloyFinger from 'alloyfinger'
 import AlloyFingerVue from 'alloyfinger/vue/alloy_finger.vue'
 import App from './App'
 import router from './router'
+import store from './vuex'
 
 require('./assets/fonts/iconfont.css')
 // require('./assets/stylus/mixin.styl')
@@ -25,5 +26,6 @@ console.log('======main=======' + Date.now())
 
 new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app')

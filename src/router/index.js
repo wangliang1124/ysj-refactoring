@@ -34,13 +34,15 @@ const routes = [
         path: '',
         component: RestaurantList,
         meta: {
-          title: 'HOME',
+          title: 'Home-List-default',
         },
       },
       {
         path: 'list/:id',
-        name: 'list',
         component: RestaurantList,
+        meta: {
+          title: 'List',
+        },
       },
     ],
   },
@@ -52,10 +54,10 @@ const routes = [
     },
   },
   {
-    path: '/query',
+    path: '/custom',
     component: CustomSearch,
     meta: {
-      title: '自定义搜索',
+      title: '私人订制',
     },
   },
   {
