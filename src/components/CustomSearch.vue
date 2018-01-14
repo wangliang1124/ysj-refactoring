@@ -13,10 +13,10 @@
       <div class="content" v-for="list in queryList">
         <h2 class="filter-title">{{list.title}}</h2>
         <ul class="filter-list">
-          <li class="filter-item" :class="{selected: list.selectedIndex===null}" @click="selectAll(list)">不限</li>
+          <li class="filter-item" :class="{selected: list.selectedIndex===0}" @click="selectItem(list, 0)">不限</li>
           <li class="filter-item" 
-            :class="{selected: index===list.selectedIndex}" 
-            @click="selectItem(list, item, index)"
+            :class="{selected: index + 1 ===list.selectedIndex}" 
+            @click="selectItem(list, index + 1)"
             v-for="(item,index) in list.listItem"
           >{{item}}</li> 
 <!--           <li class="filter-item">测试</li> <li class="filter-item">测试</li>
@@ -53,9 +53,10 @@ export default {
       inputText: '',
       inputWarning: '',
       searchRecord: [],
-      hotSearch: ['测试1', '测试2', '测试3', '测试4', '测试5'],
+      // hotSearch: ['测试1', '测试2', '测试3', '测试4', '测试5'],
       // filterTitle: ['人均', '商圈', '菜系', '场景', '其他'],
       restaurantList: [],
+      price: [100, 200, 500, 1000, 2000],
       filters: {
         price: '',
         district: '',
@@ -72,24 +73,38 @@ export default {
     //   console.log(this.$store.getters.restaurantList)
     //   return this.$store.getters.restaurantList
     // },
+    priceRange() {
+      const arr = []
+      for (let i = 0; i < this.price.length - 1; i += 1) {
+        const price1 = this.price[i]
+        const price2 = this.price[i + 1]
+        arr.push(price1 + '-' + price2)
+      }
+      console.log(arr)
+      return arr
+    },
     result() {
-      console.log('ccccccccccccccccccc')
       let rst = this.restaurantList
-      // eslint-disable-next-line
-      // const values = Object.values(this.filters)
-      // console.log(values.length)
-      // if (values) {
-      //   values.forEach((v) => {
-      //     rst = rst.filter(item => item === v)
-      //   })
-      // }
-      // eslint-disable-next-line
       const keys = Object.keys(this.filters)
       for (let i = 0; i < keys.length; i += 1) {
         const key = keys[i]
         if (this.filters[key]) {
-          console.log(this.filters[key])
-          rst = rst.filter(item => item[key] === this.filters[key])
+          if (key === 'price') {
+            rst = rst.filter((item) => {
+              const v = item.price
+              console.log(v)
+              const j = this.priceRange.findIndex(price => price === this.filters[key])
+              console.log(j)
+              if (v > this.price[j] && v < this.price[j + 1]) {
+                return true
+              }
+              return false
+            })
+            console.log(rst)
+          } else {
+            rst = rst.filter(item => item[key] === this.filters[key])
+          }
+          // console.log(this.filters[key])
         }
       }
       return rst
@@ -113,13 +128,13 @@ export default {
       this.queryList = [
         {
           label: 'price',
-          selectedIndex: null,
+          selectedIndex: 0,
           title: '人均',
-          listItem: ['200-500', '500-1000', '1000-2000'],
+          listItem: this.priceRange,
         },
         {
           label: 'district',
-          selectedIndex: null,
+          selectedIndex: 0,
           title: '商圈',
           listItem: district.data
             .filter(item => item.restaurant_area.city === currentCity)
@@ -127,19 +142,19 @@ export default {
         },
         {
           label: 'cuisine',
-          selectedIndex: null,
+          selectedIndex: 0,
           title: '菜系',
           listItem: cuisines.data.map(item => item.cuisine),
         },
         {
           label: 'scene',
-          selectedIndex: null,
+          selectedIndex: 0,
           title: '场景',
           listItem: scenes.data.map(item => item.scene),
         },
         {
           label: 'other',
-          selectedIndex: null,
+          selectedIndex: 0,
           title: '其他',
           listItem: others.data.map(item => item.other),
         },
@@ -163,22 +178,14 @@ export default {
     emptyRecord() {
       this.searchRecord = []
     },
-    selectAll(list) {
-      this.$set(list, 'selectedIndex', null)
-      this.filters[list.label] = null
-    },
-    selectItem(list, item, index) {
-      console.log(list, item, index)
-      this.filters[list.label] = item
+    selectItem(list, index) {
+      console.log(list, index)
+      this.filters[list.label] = list.listItem[index - 1]
+      console.log(list.listItem[index - 1])
       this.$set(list, 'selectedIndex', index)
       // this.result = this.restaurantList.filter(this.custom)
       // console.log(this.result)
     },
-    // custom(restaurant) {
-    //   console.log('ccccccccccccccccccc')
-    //   return restaurant.district === this.filters.district ||
-    //          restaurant.cuisine === this.filters.cuisine
-    // },
   },
 }
 

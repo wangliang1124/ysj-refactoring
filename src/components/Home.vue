@@ -113,9 +113,6 @@
       console.log('=====测试mounted=====' + id)
       // console.log(to.params)
       switch (id) {
-        case '':
-          this.restaurantList.sort((a, b) => b.updatedAt - a.updatedAt)
-          break
         case '2':
           this.restaurantList.sort((a, b) => b.price - a.price)
           break
@@ -293,8 +290,10 @@
               text-align: center
               a
                 display: block
+                text-decoration: none
                 color: rgb(77, 85, 93)
                 &.router-link-exact-active
+                  // text-decoration: none
                   color: rgb(240, 20, 20)
         .content
           padding: 18px

@@ -43,10 +43,10 @@
               desc: item.name,
               price: item.restaurant.unit_average,
               distance: this.getDistance(item.restaurant.location_x, item.restaurant.location_y),
-              district: item.restaurant.restaurant_district.district,
-              cuisine: item.restaurant.restaurant_cuisine.cuisine,
-              // scene: item.restaurant.restaurant_scene.scene || {},
-              // other: item.restaurant.restaurant_other.other || {},
+              district: (item.restaurant.restaurant_district && item.restaurant.restaurant_district.district) || '不限',
+              cuisine: (item.restaurant.restaurant_cuisine && item.restaurant.restaurant_cuisine.cuisine) || '不限',
+              scene: (item.restaurant.restaurant_scene && item.restaurant.restaurant_scene.scene) || '不限',
+              other: (item.restaurant.restaurant_other && item.restaurant.restaurant_other.other) || '不限',
               address: item.restaurant.address,
               tel: item.restaurant.tel,
               icons: this.iconMap(JSON.parse(item.restaurant.icons)),
@@ -56,6 +56,7 @@
               chefIntro: item.cook_intro,
               updatedAt: item.updated_at,
             }))
+            console.log(restaurantList)
             this.$store.dispatch('setRestaurantList', restaurantList)
           }
         } catch (err) {
