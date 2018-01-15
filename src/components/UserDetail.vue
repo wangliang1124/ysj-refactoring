@@ -1,14 +1,30 @@
 <template>
   <div class="user-detail">
     <div class="detail-wrapper">
-      <div class="img">
-        <img src="" class="avatar">
+      <div class="avatar-wrapper">
+        <img :src="userInfo.avatar" class="avatar">
+        <div class="nickname">{{userInfo.nickname}}</div>
       </div>
       
       <ul class="detail-list">
-        <div class="list-title">我的基本信息</div>
-        <li class="detail-item" v-for="item in title">
-          <span class="title">{{item}}</span><span>{{userInfo.sex}}</span>
+        <div class="list-title">基本信息</div>
+        <li class="detail-item">
+          <span class="title">性别</span><span class="info">{{userInfo.sex.info}}</span>
+        </li>
+        <li class="detail-item">
+          <span class="title">年龄</span><span class="info">{{userInfo.age}}</span>
+        </li>
+        <li class="detail-item">
+          <span class="title">职业</span><span class="info">{{userInfo.job}}</span>
+        </li>
+        <li class="detail-item">
+          <span class="title">所在地</span><span class="info">{{userInfo.province}},{{userInfo.city}},{{userInfo.country}}</span>
+        </li>
+        <li class="detail-item">
+          <span class="title">绑定手机</span><span class="info"></span>
+        </li>
+        <li class="detail-item">
+          <span class="title">用户注册时间</span><span class="info">{{userInfo.created_at | formatDate}}</span>
         </li>
       </ul>
     </div>
@@ -17,6 +33,7 @@
 <script>
   import api from 'utils/api'
   import cookie from 'cookiejs'
+  import FormatDate from 'utils/date'
   // import { mapGetters } from 'vuex'
 
   export default {
@@ -34,13 +51,19 @@
       console.log('UserDetail created===========')
       this.init()
     },
+    filters: {
+      formatDate(time) {
+        const date = new Date(time)
+        return FormatDate(date, 'yyyy-MM-dd')
+      },
+    },
     methods: {
       async init() {
         const res = await api.get(`/user/${cookie('userId')}`)
         console.log(res)
-        const vip = res.data.user_vip
+        this.userInfo = res.data.user_info
         this.$store.dispatch('setUserInfo', res.data)
-        this.userInfo = this.$store.getters.userInfo
+        const vip = res.data.user_vip
         if (!vip.isVip) {
           this.showShare = true
         } else {
@@ -56,13 +79,25 @@
 </script>
 
 <style lang="stylus" scoped>
-  // @import '../assets/stylus/mixin.styl' 
+  @import '../assets/stylus/mixin.styl' 
+  
   .user-detail
     padding: 24px
     // background: #ccc
+    .avatar-wrapper
+      text-align: center
+      .avatar
+        border-radius: 50%
+      .nickname
+        margin-top: 24px
     .detail-list
+      .list-title
+        font-dpr(14px)
+        font-weight: 700
       .detail-item, .list-title
         padding: 36px 24px
         line-height: 32px
         border-bottom: 1px solid rgba(7,17,27,0.1)
+        .info
+          float: right
 </style>

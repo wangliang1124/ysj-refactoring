@@ -7,8 +7,8 @@
         </h1>
         <router-link to="/user/detail"><span class="edit">查看并编辑个人资料</span></router-link>
       </div>
-      <div class="avatar">
-        <router-link to="/user/detail"><img src="../assets/img/avatar.jpg" width="128" height="128"></router-link>
+      <div class="avatar"> <!-- src="../assets/img/avatar.jpg" -->
+        <router-link to="/user/detail"><img :src="userInfo.avatar" width="128" height="128"></router-link>
       </div>
     </div>
     <!-- <split></split> -->
@@ -26,11 +26,12 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
+
   export default {
     name: 'UserDefault',
     data() {
       return {
-        msg: 'Welcome to Your Vue.js App',
         list: [
           { title: '购买会员', path: '/card', icon: 'icon-IKsuHWPb' },
           { title: '我的玥享卡', path: '/user/mycard', icon: 'icon-hsuEXGPzpb' },
@@ -42,6 +43,12 @@
         ],
         test: '',
       }
+    },
+    comupted: {
+      ...mapGetters(['userInfo', 'vipInfo']),
+    },
+    created() {
+      // console.log(this.$store.getters.userInfo)
     },
   }
 </script>
