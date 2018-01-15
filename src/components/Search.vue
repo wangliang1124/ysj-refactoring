@@ -4,7 +4,7 @@
       <span class="back" @click="showHome"><i class="iconfont icon-arrow-right"></i></span>
       <div class="search-wrapper">
         <i class="iconfont icon-search"></i>
-        <input type="input" class="search-input" v-model="inputText" @focus="emptyText" placeholder="search">
+        <input type="input" class="search-input" v-model="inputText" @focus="emptyText" @change="search" placeholder="search">
       </div>
       <span class="search_btn"  @click="search">搜索</span>
     </div>
@@ -22,19 +22,41 @@
           <li class="item colorful" v-for="item in hotSearch">{{item}}</li>
         </ul>
       </div>
+      <div class="result-wrapper">
+        <restaurant-list :restaurantList="result"></restaurant-list>
+      </div>
     </div>
   </div>
 </template>
 <script>
+import RestaurantList from 'components/RestaurantList'
+
 export default {
   name: 'Search',
+  components: {
+    RestaurantList,
+  },
   data() {
     return {
+      restaurantList: [],
+      // result: [],
       inputText: '',
       inputWarning: '',
       searchRecord: [],
       hotSearch: ['测试1', '测试2', '测试3', '测试4', '测试5'],
     }
+  },
+  computed: {
+    result() {
+      if (this.inputText) {
+        return this.restaurantList.filter(item =>
+          item.title.toLowerCase().indexOf(this.inputText.toLowerCase()) !== -1)
+      }
+      return []
+    },
+  },
+  created() {
+    this.restaurantList = this.$store.getters.restaurantList
   },
   methods: {
     showHome() {
@@ -47,7 +69,10 @@ export default {
       if (this.inputText) {
         this.inputWarning = ''
         this.searchRecord.push(this.inputText.trim())
-        this.inputText = ''
+        // this.result = this.restaurantList.filter(item =>
+        //   item.title.toLowerCase().indexOf(this.inputText.toLowerCase()) !== -1)
+        // console.log(this.result)
+        // this.inputText = ''
       } else {
         this.inputWarning = '搜索内容不能为空！'
       }
@@ -154,4 +179,6 @@ export default {
               background: #f3f0f9
       .hot-search
         margin-top: 48px
+      .result-wrapper
+        padding: 24px
 </style>

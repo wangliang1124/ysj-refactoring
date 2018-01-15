@@ -5,10 +5,10 @@
         <h1 class="name">
           姓名
         </h1>
-        <span class="edit">查看并编辑个人资料</span>
+        <router-link to="/user/detail"><span class="edit">查看并编辑个人资料</span></router-link>
       </div>
       <div class="avatar">
-        <img src="../assets/img/avatar.jpg" width="128" height="128">
+        <router-link to="/user/detail"><img src="../assets/img/avatar.jpg" width="128" height="128"></router-link>
       </div>
     </div>
     <!-- <split></split> -->

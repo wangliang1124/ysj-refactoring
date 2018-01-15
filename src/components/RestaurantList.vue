@@ -65,6 +65,7 @@ export default {
   watch: {
     restaurantList() {
       this.list = this.restaurantList
+      console.log(this.list)
     },
   },
 }

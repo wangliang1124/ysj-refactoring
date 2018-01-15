@@ -2,27 +2,18 @@
   <div class="restaurant-detail">
     <div class="content-wrapper">
       <div class="image-header">
-        <!-- <div class="back" @click="hide"> <i class="icon-arrow_lift"></i> </div> -->
+        <router-link to="/"> <i class="iconfont icon-arrow-right"></i></router-link>
         <swiper :imageList="imgList"></swiper>
       </div>
       <div class="info-wrapper">
         <h1 class="title">{{restaurant.title}}</h1>
         <div class="info">
-          <span>人均：￥{{restaurant.price}}</span><span>{{restaurant.cuisine}}</span><span>{{restaurant.district}}</span><span>{{restaurant.distance}}km</span>
+          <span>人均：￥{{restaurant.price}}</span><span>{{restaurant.cuisine}}</span><span>{{restaurant.district}}</span><span v-if="restaurant.distance">{{restaurant.distance}}km</span>
         </div>
         <div class="contact">
           <span class="address">地址：{{restaurant.address}}</span><br>
-          <span class="tel">电话： {{restaurant.tel}}</span>
+          <a class="tel" :href="'tel:' + restaurant.tel">电话：{{restaurant.tel}}</a>
         </div>
-<!--         <div class="icons">
-          <ul class="icon-list">
-            <li class="icon-item" v-for="i in restaurant.icons">
-              <i class="icon" :class="i.icon"></i>
-              <div class="title">{{i.title}}</div>
-            </li>
-          </ul>
-        </div> -->
-        <!-- <div class="rule" v-html="rule"></div> -->
       </div>
       <split></split>
       <div class="icons">
@@ -34,9 +25,9 @@
         </ul>
       </div>
       <split></split>
-      <div class="rule">
-        <div class="title">使用须知</div>
-        <p class="text" v-html="rule"></p>
+      <div class="use-rule">
+        <div class="title">玥享卡使用须知</div>
+        <p class="text" v-html="useRule"></p>
       </div>
       <split></split>
       <div class="chef-wrapper">
@@ -51,18 +42,20 @@
       <div class="rank"></div>
       <div class="notice"></div>
       <split></split>
-      <div class="super">
-        <a :href="superRestaurant" class="link">超级食探</a>
+      <div class="chef-talk">
+        <a :href="chefTalk" class="link" v-if="chefTalk">超级食探</a>
       </div>
       <split></split>
       <div class="detail-wrapper">
         <h2 class="title">餐厅详情</h2>
         <div class="detail" v-html="detail"></div>
       </div>
-      <!-- <div class="rule" v-html="rule"></div> -->
-      <!-- <div class="detail" v-html="detail"> -->
       </div>
-      <div class="recommend"></div>
+      <div class="guess" v-if="recommendRestaurants.length">
+        <div class="guess-title">
+          <span class="line"></span><span class="text">猜你喜欢</span><span class="line"></span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -73,47 +66,52 @@
 
   export default {
     name: 'RestaurantList',
-    props: {
-      restaurantList: {
-        type: Array,
-      },
-    },
+    // props: {
+    //   restaurantList: {
+    //     type: Array,
+    //   },
+    // },
     components: {
       Swiper,
       Split,
     },
     data() {
       return {
-        list: [],
         restaurant: {},
+        recommendRestaurants: [],
         imgList: [],
         detail: {},
-        rule: '',
-        superRestaurant: '',
-        // detailStyle: '',
+        useRule: '',
+        chefTalk: '',
       }
     },
-    watch: {
-      restaurantList() {
-        console.log(this.restaurantList[2].icons)
-        this.restaurantList = this.$store.getters.restaurantList
-        this.restaurant = this.restaurantList.find(item =>
-          item.id === parseInt(this.$route.params.id, 10))
-        this.imgList = this.restaurant.photos
-      },
-    },
-    computed: {
-      detailStyle() {
-        return {
-          lineHeight: 2,
-          textAlign: 'center',
-          color: 'rgb(77, 85, 93)',
-        }
-      },
-      // restaurantList() {
-      //   return this.$store.getters.restaurantList
+    updated() {
+      const { restaurantList } = this.$store.getters
+      this.restaurant = restaurantList.find(item => item.id === parseInt(this.$route.params.id, 10))
+      this.imgList = this.restaurant.photos
+      // if (this.restaurant.recommendID) {
+      //   this.recommendRestaurants = restaurantList.filter((item) => {
+      //     const arr = JSON.parse(this.restaurant.recommendID)
+      //     for (let i = 0; i < arr.length; i += 1) {
+      //       if (item.id === arr[i]) {
+      //         return true
+      //       }
+      //     }
+      //     return false
+      //   })
+      // }
+
       // },
     },
+    // computed: {
+    //   detailStyle() {
+    //     return {
+    //       lineHeight: 2,
+    //       textAlign: 'center',
+    //       color: 'rgb(77, 85, 93)',
+    //     }
+    //   },
+    // },
     created() {
       this.init()
     },
@@ -121,8 +119,8 @@
       async init() {
         const res = await api.get(`/specialty/${this.$route.params.id}`)
         this.detail = res.data.content_markdown_url
-        this.rule = res.data.rule_markdown_url
-        this.superRestaurant = res.data.shika_markdown_url || res.data.shitan_markdown_url
+        this.useRule = res.data.rule_markdown_url
+        this.chefTalk = res.data.shika_markdown_url || res.data.shitan_markdown_url
         console.log('=========初始化数据=======')
       },
     },
@@ -133,8 +131,22 @@
   
   .restaurant-detail
     .content-wrapper
+      .image-header
+        position: relative
+        .router-link-active
+          position: absolute
+          top: 24px
+          left: 18px
+          z-index: 1
+          padding: 6px
+          .icon-arrow-right
+            display: inline-block
+            font-dpr(18px)
+            color: #fff
+            font-weight: 900
+            transform: rotate(180deg)
       .info-wrapper
-        padding: 20px
+        padding: 12px 24px
         line-height: 1.5
         .title
           line-height: 1
@@ -155,8 +167,10 @@
         .contact
           margin-top: 20px
           color: rgb(147,153,159)
+          .tel
+            text-decoration: none
       .icons
-          margin: 20px 20px
+          padding: 12px 24px
           .icon-list
             display: flex
             justify-content: space-between
@@ -171,12 +185,13 @@
                 font-dpr(8px)
                 // font-weight: 300
                 color: rgb(147,153,159)
-      .rule
-        padding: 0 20px
+      .use-rule
+        padding: 12px 24px
         .title
           margin-top: 20px
           line-height: 14px
           font-dpr(14px)
+          font-weight: 700
           color: rgb(7, 17, 27)
         .text
           margin-top: 20px
@@ -185,7 +200,7 @@
           font-dpr(12px)
           color: rgb(147,153,159)
       .chef-wrapper
-        padding: 0 20px
+        padding: 12px 24px
         .title
           margin-top: 20px
           line-height: 14px
@@ -211,11 +226,12 @@
           line-height: 2
           font-dpr(12px)
           color: rgb(147,153,159)
-      .super
-        padding: 20px
+      .chef-talk
+        padding: 12px 24px
         .link
           display: block
           font-dpr(14px)
+          font-weight: 700
           color: rgb(7, 17, 27)
       .detail-wrapper
         margin: 20px
@@ -224,6 +240,7 @@
           margin-top: 20px
           line-height: 14px
           font-dpr(14px)
+          font-weight: 700
           color: rgb(7, 17, 27)
         .detail
           padding: 6px 8px 0 8px
@@ -240,4 +257,18 @@
               font-weight: 700
           img
             width: 100%
+      .guess
+        .guess-title
+          display: flex
+          // margin: 28px 0 24px 0
+          // text-align: center
+          .line
+            flex: 1
+            display: inline-block
+            // position: relative
+            // top: -8px
+            // border-bottom: 1px solid rgba(255, 255, 255, 0.2)
+          .text
+            margin: 0 10px
+            font-size: 16px
 </style>

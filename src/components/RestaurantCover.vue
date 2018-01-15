@@ -1,13 +1,16 @@
 <template>
   <div class="restaurant-cover">
     <div class="cover">
-      <img :src="restaurant.cover" class="img">
+      <router-link :to="{ name: 'detail', params: {id: restaurant.id}}">
+        <img :src="restaurant.cover" class="img">
+      </router-link>
     </div>
     <div class="text">
       <h1 class="title">{{restaurant.title}}</h1>
-      <div class="desc">{{restaurant.desc}}</div>
+      <div class="desc">享受价值 <em class="value">¥{{restaurant.value}}元</em>{{restaurant.type}}服务</div>
+      <!-- <div class="desc">{{restaurant.desc}}</div> -->
       <div class="info">
-        <span>人均￥{{restaurant.price}}</span><span>{{restaurant.cuisine}}</span><span>{{restaurant.distance}}km</span>
+        <span>人均￥{{restaurant.price}}</span><span>{{restaurant.cuisine}}</span><span v-if="restaurant.distance">{{restaurant.distance}}km</span>
       </div>
     </div>
   </div>
@@ -53,14 +56,22 @@ export default {
       line-height:1.5
       .title
         font-dpr(14px)
-        font-weight: 700
+        font-weight: 200
         color: rgb(7,17,27)
       .desc
         font-dpr(10px)
+        font-weight: 200
         color: rgb(147,153,159)
+        .value
+          color: #550055
+          font-weight: 700
       .info
         span
           margin-right: 10px
+          padding: 0px 4px
           font-dpr(10px)
-          color: rgb(147,153,159)
+          font-weight: 200
+          color: #fff
+          border-radius: 2px
+          background: #550055
 </style>

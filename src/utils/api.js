@@ -1,7 +1,7 @@
 import axios from 'axios'
-// import cookie from 'cookiejs'
+import cookie from 'cookiejs'
 // import qs from 'qs';
-import store from '../vuex/index'
+// import store from '../vuex/index'
 
 const api = axios.create({
   baseURL: 'http://ysj.tcfellow.com:3000/api/v1',
@@ -13,7 +13,7 @@ api.interceptors.request.use(
     // 在发送请求之前添加验证
     // const config = cfg
     // eslint-disable-next-line
-    config.headers.authorization = store.getters.token.id
+    config.headers.authorization = cookie('token')
     // console.log(config)
     return config
   },

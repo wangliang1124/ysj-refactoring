@@ -51,9 +51,11 @@
               tel: item.restaurant.tel,
               icons: this.iconMap(JSON.parse(item.restaurant.icons)),
               value: item.value,
+              type: item.type,
               chefAvatar: item.cook_avatar,
               chefName: item.cook_name,
               chefIntro: item.cook_intro,
+              recommendId: item.recommend_id,
               updatedAt: item.updated_at,
             }))
             console.log(restaurantList)

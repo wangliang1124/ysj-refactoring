@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import cookie from 'cookiejs'
-import { signIn, oAuth, handleOldCode } from 'utils/utils'
+import { signIn, oAuth, handleOldCode } from 'utils/auth'
 import Home from 'components/Home'
 import RestaurantList from 'components/RestaurantList'
 import FlexibleTest from 'components/FlexibleTest'
@@ -11,6 +11,7 @@ const CustomSearch = () => import('components/CustomSearch')
 const RestaurantDetail = () => import('components/RestaurantDetail')
 const User = () => import('components/User')
 const UserDefault = () => import('components/UserDefault')
+const UserDetail = () => import('components/UserDetail')
 const UserBuy = () => import('components/UserBuy')
 const UserMyCard = () => import('components/UserMyCard')
 const UserOrder = () => import('components/UserOrder')
@@ -62,6 +63,7 @@ const routes = [
   },
   {
     path: '/detail/:id',
+    name: 'detail',
     component: RestaurantDetail,
     meta: {
       title: '餐厅详情',
@@ -77,6 +79,15 @@ const routes = [
         name: 'userDefault',
         meta: {
           title: '个人中心',
+          requiresAuth: false,
+        },
+      },
+      {
+        path: '/user/detail',
+        component: UserDetail,
+        name: 'userDetail',
+        meta: {
+          title: '个人资料',
           requiresAuth: true,
         },
       },
@@ -94,6 +105,7 @@ const routes = [
         name: 'userMyCard',
         meta: {
           title: '我的玥享卡',
+          requiresAuth: true,
         },
       },
       {
@@ -102,6 +114,7 @@ const routes = [
         name: 'userOrder',
         meta: {
           title: '我的订单',
+          requiresAuth: true,
         },
       },
       {
@@ -110,6 +123,7 @@ const routes = [
         name: 'userCoupon',
         meta: {
           title: '玥享卷',
+          requiresAuth: true,
         },
       },
       {
@@ -118,6 +132,7 @@ const routes = [
         name: 'userShare',
         meta: {
           title: '邀请好友',
+          requiresAuth: true,
         },
       },
       {
@@ -126,6 +141,7 @@ const routes = [
         name: 'userFavorite',
         meta: {
           title: '我的收藏',
+          requiresAuth: true,
         },
       },
       {
@@ -151,6 +167,8 @@ const router = new Router({
 
 router.beforeEach(async (to, from, next) => {
   // const { code, inviter_id } = to.query
+  // console.log(cookie('token'))
+  // console.log(to)
   if (to.meta.requiresAuth && !cookie('token')) { // 如果需要授权并且还没有登陆
     const { code } = to.query
     handleOldCode(code)
@@ -158,12 +176,12 @@ router.beforeEach(async (to, from, next) => {
     //   const url = window.location.href.replace('code', 'actCode')
     //   window.location.replace(url)
     // }
+    // console.log(code)
     if (code) { // 是否已经获取微信授权code，如果获取则登陆
-      signIn(code)
+      signIn(code, next)
       document.title = to.meta.title
-      next()
     } else { // 否则去获取授权
-      oAuth()
+      oAuth(to)
     }
   } else { // 否则直接进入页面
     document.title = to.meta.title

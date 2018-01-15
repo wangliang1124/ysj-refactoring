@@ -23,7 +23,9 @@
         </transition>
         <div class="mask" v-show="cityShow" @click="hideCityList"></div>
       </div>
-      <swiper :imageList="bannerList"></swiper>
+      <router-link to="/card">
+        <swiper :imageList="bannerList"></swiper>
+      </router-link>
       <div class="content-wrapper">
         <div class="tabs">
           <ul class="tab-list">
@@ -105,6 +107,12 @@
         return this.restaurantListlist.sort((a, b) => a.distance - b.distance)
       },
     },
+    created() {
+      console.log('===========Home created================')
+      this.initData()
+      this.currentCity = window.localStorage.getItem('currentCity')
+      this.currentIndex = this.cityList.findIndex(item => item === this.currentCity)
+    },
     updated() {
       this.restaurantList = this.$store.getters.restaurantList
     },
@@ -123,10 +131,6 @@
           this.restaurantList.sort((a, b) => b.updatedAt - a.updatedAt)
       }
       next()
-    },
-    created() {
-      console.log('===========Home created================')
-      this.initData()
     },
     methods: {
       async initData() {

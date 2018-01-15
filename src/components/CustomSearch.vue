@@ -85,6 +85,8 @@ export default {
     },
     result() {
       let rst = this.restaurantList
+      rst = rst.filter(item =>
+        item.title.toLowerCase().indexOf(this.inputText.trim().toLowerCase()) !== -1)
       const keys = Object.keys(this.filters)
       for (let i = 0; i < keys.length; i += 1) {
         const key = keys[i]

@@ -4,10 +4,10 @@ import cookie from 'cookiejs'
 
 Vue.use(Vuex)
 
-const storeUser = (d) => {
-  cookie('token', d.token, { expires: 30, path: '/' })
-  cookie('uuid', d.user_id, { expires: 30, path: '/' })
-}
+// const storeUser = (d) => {
+//   cookie('token', d.token, { expires: 30, path: '/' })
+//   cookie('uuid', d.user_id, { expires: 30, path: '/' })
+// }
 
 const state = {
   userInfo: {},
@@ -39,7 +39,7 @@ const getters = {
 
 const actions = {
   setUser({ commit }, d) {
-    storeUser(d)
+    // storeUser(d)
     commit('SET_USER', d)
   },
   setUserInfo({ commit }, d) {
@@ -83,8 +83,8 @@ const mutations = {
       ...d.user_vip,
     }
     // 把获取到用户信息的数据存储到本地，防止页面刷新state重置
-    window.localStorage.setItem('userInfo', JSON.stringify(s.userInfo));
-    cookie('userInfo', JSON.stringify(s.userInfo));
+    // window.localStorage.setItem('userInfo', JSON.stringify(s.userInfo));
+    // cookie('userInfo', JSON.stringify(s.userInfo));
   },
   SET_VIP_INFO(s, d) {
     s.vipInfo = {
