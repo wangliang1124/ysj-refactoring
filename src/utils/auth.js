@@ -5,6 +5,7 @@ import api from './api'
 
 const oAuth = (to) => {
   const path = 'https://open.weixin.qq.com/connect/oauth2/authorize'
+  console.log('==auth===' + window.location.href)
   const query = {
     appid: 'wxfc34b0cedd6ce73f',
     redirect_uri: window.location.origin + to.fullPath,
@@ -14,7 +15,8 @@ const oAuth = (to) => {
   }
   const hash = '#wechat_redirect'
   const url = `${path}?${qs.stringify(query)}${hash}`
-  window.location.replace(url)
+  // window.location.replace(url)
+  window.location.assign(url)
   console.log('=======auth=========' + query.redirect_uri)
 }
 
@@ -33,7 +35,6 @@ const signIn = async (code, next) => {
     oAuth()
   }
 }
-
 
 const handleOldCode = (oldCode) => {
   if (oldCode && oldCode.startsWith('xxxxx') && oldCode.length <= 17) { // 把老二维码url查询参数中的code字符串替换为actCode

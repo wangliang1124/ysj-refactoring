@@ -7,21 +7,26 @@
       </div>
       
       <ul class="detail-list">
-        <h2 class="list-title">基本信息</h2>
+        <h2 class="list-title">编辑基本信息</h2>
         <li class="detail-item">
-          <span class="title">性别</span><span class="info" :class="{editable: editable}" contenteditable="true" v-if="userInfo.sex">{{userInfo.sex.info}}</span>
+          <span class="title">性别</span>
+          <input type="radio" name="sex" value="male" checked>男
+          <input type="radio" name="sex" value="female">女
         </li>
         <li class="detail-item">
-          <span class="title">年龄</span><span class="info" :class="{editable: editable}" contenteditable="true">{{userInfo.age}}</span>
+          <span class="title">年龄</span>
+          <input type="date" name="user_date" />
+          <input type="range" name="age" min="12" max="60" step="1" value="18" />
+        <li class="detail-item">
+          <span class="title">职业</span> 
+          <input type="text" placeholder="输入职业">
+        <li class="detail-item">
+          <span class="title">所在地</span>
+          <input type="text" placeholder="输入所在地">
         </li>
         <li class="detail-item">
-          <span class="title">职业</span><span class="info" :class="{editable: editable}" contenteditable="true">{{userInfo.job}}</span>
-        </li>
-        <li class="detail-item">
-          <span class="title">所在地</span><span class="info" :class="{editable: editable}" contenteditable="true">{{userInfo.province}},{{userInfo.city}},{{userInfo.country}}</span>
-        </li>
-        <li class="detail-item">
-          <span class="title">绑定手机</span><span class="info" :class="{editable: editable}" contenteditable="true"></span>
+          <span class="title">绑定手机</span> 
+          <input type="number" name="tel" min="10000000000" max="19999999999" placeholder="请输入手机号码" />
         </li>
         <li class="detail-item">
           <span class="title">注册时间</span><span class="info">{{userInfo.created_at | formatDate}}</span>

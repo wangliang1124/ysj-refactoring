@@ -5,7 +5,7 @@ import cookie from 'cookiejs'
 
 const api = axios.create({
   baseURL: 'http://ysj.tcfellow.com:3000/api/v1',
-  timeout: 1000,
+  timeout: 6000,
 })
 
 api.interceptors.request.use(

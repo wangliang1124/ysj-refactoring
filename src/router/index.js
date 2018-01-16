@@ -12,6 +12,7 @@ const RestaurantDetail = () => import('components/RestaurantDetail')
 const User = () => import('components/User')
 const UserDefault = () => import('components/UserDefault')
 const UserDetail = () => import('components/UserDetail')
+const UserDetailEdit = () => import('components/UserDetailEdit')
 const UserBuy = () => import('components/UserBuy')
 const UserMyCard = () => import('components/UserMyCard')
 const UserOrder = () => import('components/UserOrder')
@@ -92,6 +93,15 @@ const routes = [
         },
       },
       {
+        path: 'edit',
+        component: UserDetailEdit,
+        name: 'userDetailEdit',
+        meta: {
+          title: '编辑个人资料',
+          requiresAuth: true,
+        },
+      },
+      {
         path: '/card',
         component: UserBuy,
         name: 'userBuy',
@@ -168,7 +178,7 @@ const router = new Router({
 router.beforeEach(async (to, from, next) => {
   // const { code, inviter_id } = to.query
   // console.log(cookie('token'))
-  // console.log(to)
+  console.log('======router===========' + to.query + '===================')
   if (to.meta.requiresAuth && !cookie('token')) { // 如果需要授权并且还没有登陆
     const { code } = to.query
     handleOldCode(code)

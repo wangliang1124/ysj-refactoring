@@ -39,14 +39,13 @@
           { title: '我的收藏', path: '/user/favorite', icon: 'icon-qXocbWDGu' },
           { title: '关于我们', path: '/aboutus', icon: 'icon-LPaRCxiMw' },
         ],
-        test: '',
         // userInfo: {},
       }
     },
     computed: {
       // ...mapGetters(['userInfo', 'vipInfo']),
       userInfo() {
-        return this.$store.getters.userInfo || {}
+        return this.$store.getters.userInfo || { nickname: '姓名', avatar: '../assets/img/avatar.jpg' }
       },
     },
     created() {
