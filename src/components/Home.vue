@@ -36,7 +36,6 @@
           </ul>
         </div>
         <div class="content">
-          <router-view></router-view> 
           <!-- <restaurant-list :restaurantList="restaurantList"></restaurant-list> -->
           <router-view :restaurantList="restaurantList"></router-view>
         </div>
@@ -74,7 +73,7 @@
         bannerList: [],
         isShowBanner: true,
         currentLocation: '北京',
-        restaurantList: [],
+        // restaurantList: [],
         list: [],
         filter: {
           scene_id: '',
@@ -94,10 +93,9 @@
       }
     },
     computed: {
-      // restaurantList() {
-      //   console.log('cccccccccccccccccc')
-      //   return this.$store.getters.restaurantList
-      // },
+      restaurantList() {
+        return this.$store.getters.restaurantList
+      },
       listOrderByPrice() { // 按价格排序
         // const list = this.restaurantList.concat() // 复制array，避免引用
         return this.restaurantList.sort((a, b) => b.price - a.price)
@@ -108,17 +106,19 @@
       },
     },
     created() {
-      console.log('===========Home created================')
+      console.log('============Home created================')
       this.initData()
+      // this.restaurantList = this.$store.getters.restaurantList
+      // console.log(this.restaurantList)
       this.currentCity = window.localStorage.getItem('currentCity')
       this.currentIndex = this.cityList.findIndex(item => item === this.currentCity)
     },
-    updated() {
-      this.restaurantList = this.$store.getters.restaurantList
-    },
+    // updated() {
+    //   this.restaurantList = this.$store.getters.restaurantList
+    // },
     beforeRouteUpdate(to, from, next) {
       const { id } = to.params
-      console.log('=====测试mounted=====' + id)
+      console.log('=====beforeRouteUpdate=====' + id)
       // console.log(to.params)
       switch (id) {
         case '2':

@@ -1,7 +1,9 @@
 <template>
   <div class="user">
     <div class="main-wrapper">
-      <router-view></router-view>
+      <!-- <keep-alive> -->
+        <router-view></router-view>
+      <!-- </keep-alive> -->
     </div>
     <div class="footer">
       <span>购买即视为同意&nbsp;&nbsp;</span><span>@玥食记</span><span><router-link to="/aboutus">免责声明</router-link></span>
@@ -12,6 +14,9 @@
 <script>
   export default {
     name: 'User',
+    created() {
+      console.log('==========User created===========')
+    },
   }
 </script>
 

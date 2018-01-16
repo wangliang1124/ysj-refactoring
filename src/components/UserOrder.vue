@@ -10,7 +10,7 @@
             <!-- <img class="cover" src="../assets/img/card.jpg"> -->
             <div class="content">
                 <li class="info">订单号：{{item.order_num}}</li>
-                <li class="info">玥享卡：{{item.card.name}}</li>
+                <li class="info" >玥享卡：{{item.card ? item.card.name : '玥享卡'}}</li>
                 <li class="info">金额：{{item.should_fee}}</li>
                 <li class="info">数量：{{item.count}}</li>
             </div>

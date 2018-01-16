@@ -9,22 +9,22 @@
       <ul class="detail-list">
         <div class="list-title">基本信息</div>
         <li class="detail-item">
-          <span class="title">性别</span><span class="info">{{userInfo.sex.info}}</span>
+          <span class="title">性别</span><span class="info edit" contenteditable="true" v-if="userInfo.sex">{{userInfo.sex.info}}</span>
         </li>
         <li class="detail-item">
-          <span class="title">年龄</span><span class="info">{{userInfo.age}}</span>
+          <span class="title">年龄</span><span class="info" contenteditable="true">{{userInfo.age}}</span>
         </li>
         <li class="detail-item">
-          <span class="title">职业</span><span class="info">{{userInfo.job}}</span>
+          <span class="title">职业</span><span class="info edit" contenteditable="true">{{userInfo.job}}</span>
         </li>
         <li class="detail-item">
-          <span class="title">所在地</span><span class="info">{{userInfo.province}},{{userInfo.city}},{{userInfo.country}}</span>
+          <span class="title">所在地</span><span class="info" contenteditable="true">{{userInfo.province}},{{userInfo.city}},{{userInfo.country}}</span>
         </li>
         <li class="detail-item">
-          <span class="title">绑定手机</span><span class="info"></span>
+          <span class="title">绑定手机</span><span class="info" contenteditable="true"></span>
         </li>
         <li class="detail-item">
-          <span class="title">用户注册时间</span><span class="info">{{userInfo.created_at | formatDate}}</span>
+          <span class="title">注册时间</span><span class="info">{{userInfo.created_at | formatDate}}</span>
         </li>
       </ul>
     </div>
@@ -40,7 +40,7 @@
     name: 'UserDetail',
     data() {
       return {
-        title: ['性别', '年龄', '职业', '所在地', '绑定手机', '用户注册时间'],
+        // title: ['性别', '年龄', '职业', '所在地', '绑定手机', '用户注册时间'],
         userInfo: {},
       }
     },
@@ -60,7 +60,6 @@
     methods: {
       async init() {
         const res = await api.get(`/user/${cookie('userId')}`)
-        console.log(res)
         this.userInfo = res.data.user_info
         this.$store.dispatch('setUserInfo', res.data)
         const vip = res.data.user_vip
@@ -100,4 +99,7 @@
         border-bottom: 1px solid rgba(7,17,27,0.1)
         .info
           float: right
+          &.edit
+            padding: 4px 20px
+            background: #ccc
 </style>

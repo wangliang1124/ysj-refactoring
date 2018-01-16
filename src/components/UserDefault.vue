@@ -2,9 +2,7 @@
   <div class="user-wrapper">
     <div class="header">
       <div class="person">
-        <h1 class="name">
-          姓名
-        </h1>
+        <h1 class="name">{{userInfo.nickname}}</h1>
         <router-link to="/user/detail"><span class="edit">查看并编辑个人资料</span></router-link>
       </div>
       <div class="avatar"> <!-- src="../assets/img/avatar.jpg" -->
@@ -26,7 +24,7 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  // import { mapGetters } from 'vuex'
 
   export default {
     name: 'UserDefault',
@@ -42,13 +40,19 @@
           { title: '关于我们', path: '/aboutus', icon: 'icon-LPaRCxiMw' },
         ],
         test: '',
+        // userInfo: {},
       }
     },
-    comupted: {
-      ...mapGetters(['userInfo', 'vipInfo']),
+    computed: {
+      // ...mapGetters(['userInfo', 'vipInfo']),
+      userInfo() {
+        return this.$store.getters.userInfo || {}
+      },
     },
     created() {
+      console.log('==========userDefault created============')
       // console.log(this.$store.getters.userInfo)
+      // this.userInfo = this.$store.getters.userInfo
     },
   }
 </script>

@@ -83,7 +83,7 @@ const routes = [
         },
       },
       {
-        path: '/user/detail',
+        path: 'detail',
         component: UserDetail,
         name: 'userDetail',
         meta: {

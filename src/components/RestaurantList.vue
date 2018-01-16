@@ -1,6 +1,6 @@
 <template>
   <ul class="restaurant-list">
-    <template v-for="(item,index) in list">
+    <template v-for="(item,index) in restaurantList">
       <li class="restaurant-item">
         <restaurant-cover :restaurant="item"></restaurant-cover>
       </li>
@@ -21,11 +21,14 @@ export default {
   components: {
     RestaurantCover,
   },
-  data() {
-    return {
-      list: [],
-    }
+  created() {
+    console.log('========list created===========')
   },
+  // data() {
+  //   return {
+  //     list: [],
+  //   }
+  // },
   // computed: {
   //   // 按价格排序
   //   listOrderByPrice() {
@@ -62,12 +65,15 @@ export default {
   //   }
   //   next()
   // },
-  watch: {
-    restaurantList() {
-      this.list = this.restaurantList
-      console.log(this.list)
-    },
-  },
+  // mounted() {
+  //   this.list = this.restaurantList
+  // },
+  // watch: {
+  //   restaurantList() {
+  //     this.list = this.restaurantList
+  //     console.log(this.list)
+  //   },
+  // },
 }
 
 </script>
