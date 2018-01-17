@@ -9,6 +9,12 @@ import FlexibleTest from 'components/FlexibleTest'
 const Search = () => import('components/Search')
 const CustomSearch = () => import('components/CustomSearch')
 const RestaurantDetail = () => import('components/RestaurantDetail')
+const Goods = () => import('components/Goods')
+const GoodsList = () => import('components/GoodsList')
+const GoodsDetail = () => import('components/GoodsDetail')
+const RankList = () => import('components/RankList')
+const RankListChef = () => import('components/RankListChef')
+const RankListRestaurant = () => import('components/RankListRestaurant')
 const User = () => import('components/User')
 const UserDefault = () => import('components/UserDefault')
 const UserDetail = () => import('components/UserDetail')
@@ -69,6 +75,56 @@ const routes = [
     meta: {
       title: '餐厅详情',
     },
+  },
+  {
+    path: '/goods',
+    component: Goods,
+    meta: {
+      title: '玥食记优品',
+    },
+    children: [
+      {
+        path: '',
+        name: 'goodsList',
+        component: GoodsList,
+        meta: {
+          title: '产品列表',
+        },
+      },
+      {
+        path: 'detail/:id',
+        name: 'goodsDetail',
+        component: GoodsDetail,
+        meta: {
+          title: '米酒',
+        },
+      },
+    ],
+  },
+  {
+    path: '/ranklist',
+    // name: 'ranklist',
+    meta: {
+      requireAuth: false,
+      title: '排行榜',
+    },
+    component: RankList,
+    children: [{
+      path: 'cook',
+      name: 'cook',
+      component: RankListChef,
+      meta: { title: '主厨排行' },
+    }, {
+      path: 'total',
+      name: 'total',
+      meta: { title: '餐厅总排行' },
+      component: RankListRestaurant,
+    }, {
+      path: 'month',
+      name: 'month',
+      meta: { title: '餐厅月排行' },
+      component: RankListRestaurant,
+    }],
   },
   {
     path: '/user',

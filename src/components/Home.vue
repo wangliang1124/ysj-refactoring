@@ -33,6 +33,7 @@
             <li class="tab-item"><router-link :to="{path:'/list/2'}">好评优先</router-link></li>
             <li class="tab-item"><router-link :to="{path:'/list/3'}">距离最近</router-link></li>
             <li class="tab-item"><router-link :to="{path:'/custom'}">筛选</router-link></li>
+            <li class="tab-item"><router-link :to="{path:'/goods'}">优品</router-link></li>
           </ul>
         </div>
         <div class="content">

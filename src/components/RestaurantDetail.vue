@@ -2,7 +2,8 @@
   <div class="restaurant-detail">
     <div class="content-wrapper">
       <div class="image-header">
-        <router-link to="/"> <i class="iconfont icon-arrow-right"></i></router-link>
+        <!-- <router-link to="/"> <i class="iconfont icon-arrow-right"></i></router-link> -->
+        <span class="back" @click="back"><i class="iconfont icon-arrow-right"></i></span>
         <swiper :imageList="imgList"></swiper>
       </div>
       <div class="info-wrapper">
@@ -42,10 +43,18 @@
       <div class="rank"></div>
       <div class="notice"></div>
       <split></split>
-      <div class="chef-talk">
-        <a :href="chefTalk" class="link" v-if="chefTalk">超级食探</a>
+      <div class="ranking">
+        <span class="item"><a href="/ranklist/cook">主厨排名&nbsp;&nbsp; {{this.chefIndex}}</a></span>
+        <span class="item"><a href="/ranklist/month">餐厅月排名&nbsp;&nbsp; {{this.monthIndex}}</a></span>
+        <span class="item"><a href="/ranklist/total">餐厅总排名&nbsp;&nbsp; {{this.totalIndex}}</a></span>
       </div>
       <split></split>
+      <template  v-if="chefTalk">
+        <div class="chef-talk">
+          <a :href="chefTalk" class="link">超级食探</a>
+        </div>
+        <split></split>
+      </template>
       <div class="detail-wrapper">
         <h2 class="title">餐厅详情</h2>
         <div class="detail" v-html="detail"></div>
@@ -123,6 +132,9 @@
         this.chefTalk = res.data.shika_markdown_url || res.data.shitan_markdown_url
         console.log('=========初始化数据=======')
       },
+      back() {
+        this.$router.back()
+      },
     },
   }
 </script>
@@ -133,7 +145,7 @@
     .content-wrapper
       .image-header
         position: relative
-        .router-link-active
+        .router-link-active, .back
           position: absolute
           top: 24px
           left: 18px
@@ -179,11 +191,11 @@
               display: inline-block
               text-align: center
               .icon
-                font-dpr(18px)
+                font-dpr(24px)
                 color: rgb(147,153,159)
               .title
                 font-dpr(8px)
-                // font-weight: 300
+                font-weight: 200
                 color: rgb(147,153,159)
       .use-rule
         padding: 12px 24px
@@ -226,6 +238,20 @@
           line-height: 2
           font-dpr(12px)
           color: rgb(147,153,159)
+      .ranking 
+        display: flex
+        margin: 0 24px
+      .ranking .item 
+        flex: 1
+        margin: 20px 0
+        text-align: left
+        color: rgb(147,153,159)
+        border-right: 1px solid rgba(7, 17, 27, 0.1)
+      .ranking .item:nth-child(2) 
+        text-align: center
+      .ranking .item:last-child
+        border-right: 0
+        text-align: right
       .chef-talk
         padding: 12px 24px
         .link
@@ -270,5 +296,5 @@
             // border-bottom: 1px solid rgba(255, 255, 255, 0.2)
           .text
             margin: 0 10px
-            font-size: 16px
+            font-dpr(16px)
 </style>

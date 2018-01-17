@@ -5,28 +5,30 @@
         <img :src="userInfo.avatar" class="avatar">
         <div class="nickname">{{userInfo.nickname}}</div>
       </div>
-      
       <ul class="detail-list">
-        <h2 class="list-title">基本信息</h2>
+        <h2 class="list-title">基本信息<span class="edit" @click="editInfo">编辑</span></h2>
         <li class="detail-item">
-          <span class="title">性别</span><span class="info" :class="{editable: editable}" contenteditable="true" v-if="userInfo.sex">{{userInfo.sex.info}}</span>
+          <span class="title">性别</span><span class="info" v-if="userInfo.sex">{{userInfo.sex.info}}</span>
         </li>
         <li class="detail-item">
-          <span class="title">年龄</span><span class="info" :class="{editable: editable}" contenteditable="true">{{userInfo.age}}</span>
+          <span class="title">年龄</span><span class="info">{{userInfo.age}}</span>
         </li>
         <li class="detail-item">
-          <span class="title">职业</span><span class="info" :class="{editable: editable}" contenteditable="true">{{userInfo.job}}</span>
+          <span class="title">职业</span><span class="info">{{userInfo.job}}</span>
         </li>
         <li class="detail-item">
-          <span class="title">所在地</span><span class="info" :class="{editable: editable}" contenteditable="true">{{userInfo.province}},{{userInfo.city}},{{userInfo.country}}</span>
+          <span class="title">所在地</span><span class="info">{{userInfo.province}},{{userInfo.city}},{{userInfo.country}}</span>
         </li>
         <li class="detail-item">
-          <span class="title">绑定手机</span><span class="info" :class="{editable: editable}" contenteditable="true"></span>
+          <span class="title">手机</span><span class="info">{{userInfo.phone}}</span>
         </li>
         <li class="detail-item">
           <span class="title">注册时间</span><span class="info">{{userInfo.created_at | formatDate}}</span>
         </li>
       </ul>
+      <div class="btn">
+        <span class="back" @click="showHome">返回</span>
+      </div>
     </div>
   </div>
 </template>
@@ -74,6 +76,12 @@
         //   }
         // }
       },
+      editInfo() {
+        this.$router.push('/user/edit')
+      },
+      showHome() {
+        this.$router.push({ path: '/user' })
+      },
     },
   }
 </script>
@@ -87,20 +95,37 @@
     .avatar-wrapper
       text-align: center
       .avatar
+        width: 128px
+        height: 128px
         border-radius: 50%
       .nickname
         margin-top: 24px
     .detail-list
       .list-title
+        position: relative
+        // display: inline-block
         font-dpr(14px)
         font-weight: 700
+        .edit
+          position: absolute
+          float: right
+          right: 0
+          top: 50%
+          transform: translateY(-50%)
+          padding: 4px 20px
+          color: rgb(160, 20, 20)
       .detail-item, .list-title
         padding: 36px 24px
         line-height: 32px
         border-bottom: 1px solid rgba(7,17,27,0.1)
         .info
           float: right
-          &.editable
-            padding: 4px 20px
-            background: #ccc
+    .btn
+      display: flex
+      margin: 24px
+      .back
+        flex: 1
+        padding: 16px 0
+        text-align: center
+        border: 1px solid rgba(7, 17, 27, 0.3)
 </style>

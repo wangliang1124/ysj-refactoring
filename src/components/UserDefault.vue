@@ -2,11 +2,13 @@
   <div class="user-wrapper">
     <div class="header">
       <div class="person">
-        <h1 class="name">{{userInfo.nickname}}</h1>
-        <router-link to="/user/detail"><span class="edit">查看并编辑个人资料</span></router-link>
+        <router-link to="/user/detail">
+          <h1 class="name">{{userInfo.nickname}}</h1>
+          <span class="edit">查看并编辑个人资料</span>
+        </router-link>
       </div>
       <div class="avatar"> <!-- src="../assets/img/avatar.jpg" -->
-        <router-link to="/user/detail"><img :src="userInfo.avatar" width="128" height="128"></router-link>
+        <router-link to="/user/detail"><img :src="userInfo.avatar"></router-link>
       </div>
     </div>
     <!-- <split></split> -->
@@ -74,10 +76,13 @@
           color: rgb(7, 17, 27)
         .edit
           font-dpr(12px)
+        a
+          text-decoration: none
       .avatar
         flex: 0 0 128px
-        width: 128px
-        height: 128px
+        img
+          width: 128px
+          height: 128px
     .content-wrapper
       .content
         .item

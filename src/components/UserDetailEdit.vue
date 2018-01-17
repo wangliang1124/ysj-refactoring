@@ -5,79 +5,135 @@
         <img :src="userInfo.avatar" class="avatar">
         <div class="nickname">{{userInfo.nickname}}</div>
       </div>
-      
       <ul class="detail-list">
         <h2 class="list-title">编辑基本信息</h2>
         <li class="detail-item">
           <span class="title">性别</span>
-          <input type="radio" name="sex" value="male" checked>男
-          <input type="radio" name="sex" value="female">女
+          <div class="sex">
+            <label for="male">
+              <input type="radio" name="sex" id="male" value="1" checked style="display:none;" v-model="sex">
+              <span>男</span>
+            </label>
+            <label for="female">
+              <input type="radio" name="sex" id="female" value="2" style="display:none;" v-model="sex">
+              <span>女</span>
+            </label>
+          </div>
         </li>
         <li class="detail-item">
-          <span class="title">年龄</span>
-          <input type="date" name="user_date" />
-          <input type="range" name="age" min="12" max="60" step="1" value="18" />
+          <label for="age">
+            <span class="title">年龄</span>
+            <input type="number" name="age" min="12" max="9999" step="1" id="age" placeholder="输入年龄" v-model.number="age">
+          </label>
         <li class="detail-item">
-          <span class="title">职业</span> 
-          <input type="text" placeholder="输入职业">
+          <label for="job">
+            <span class="title">职业</span> 
+            <input type="text" placeholder="输入职业" id='job' v-model="job">
+          </label>
         <li class="detail-item">
           <span class="title">所在地</span>
-          <input type="text" placeholder="输入所在地">
+          <input type="text" placeholder="国家" id="country"  size="4" v-model="country">
+          <input type="text" placeholder="省" id="province" size="4" v-model="province">
+          <input type="text" placeholder="市" id="city" size="4" v-model="city">
         </li>
         <li class="detail-item">
-          <span class="title">绑定手机</span> 
-          <input type="number" name="tel" min="10000000000" max="19999999999" placeholder="请输入手机号码" />
-        </li>
-        <li class="detail-item">
-          <span class="title">注册时间</span><span class="info">{{userInfo.created_at | formatDate}}</span>
+          <label for="tel">
+            <span class="title">绑定手机</span> 
+            <input type="number" name="tel" placeholder="请输入手机号码" id="tel" min="0000" max="9999999999" v-model.number="phone" @input="checkMobile">
+            <button class="btn_verify" @click="getVerifyCode">获取验证码</button>
+          </label>
+          <div class="verify" v-if="verifyShow">
+            <span class="title">验证手机</span> 
+            <input type="number" placeholder="请输入验证码" min="0000" max="99999999" v-model.number="verifyCode">
+            <button class="btn_verify" @click="verify" placeholder="请输入验证码">绑定手机</button>
+          </div>
         </li>
       </ul>
+      <div class="warning">{{warningText}}</div>
+      <div class="success">{{successText}}</div>
+      <div class="btn">
+        <span class="cancel" @click="showHome">取消</span><span class="confirm" @click="confirm">确认</span>
+      </div>
     </div>
   </div>
 </template>
 <script>
   import api from 'utils/api'
   import cookie from 'cookiejs'
-  import FormatDate from 'utils/date'
-  // import { mapGetters } from 'vuex'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'UserDetail',
     data() {
       return {
         // title: ['性别', '年龄', '职业', '所在地', '绑定手机', '用户注册时间'],
-        userInfo: {},
         editable: true,
+        sex: '1', // '1' 男， '2' 女
+        age: '',
+        job: '',
+        province: '',
+        city: '',
+        country: '中国',
+        phone: '',
+        verifyCode: '',
+        verifyShow: false,
+        warningText: '',
+        successText: '',
       }
     },
-    // comupted: {
-    //   ...mapGetters(['userInfo', 'vipInfo']),
-    // },
-    created() {
-      console.log('UserDetail created===========')
-      this.init()
+    computed: {
+      ...mapGetters(['userInfo', 'vipInfo']),
     },
-    filters: {
-      formatDate(time) {
-        const date = new Date(time)
-        return FormatDate(date, 'yyyy-MM-dd')
-      },
+    created() {
+      console.log('UserDetailEdit created===========')
+    },
+    updated() {
+      console.log(this.userInfo.sex)
     },
     methods: {
-      async init() {
-        const res = await api.get(`/user/${cookie('userId')}`)
-        this.userInfo = res.data.user_info
-        this.$store.dispatch('setUserInfo', res.data)
-        // const vip = res.data.user_vip
-        // if (!vip.isVip) {
-        //   this.showShare = true
-        // } else {
-        //   const timeDiff = vip.expire_time - Date.now() <= 60 * 60 * 24 * 90 * 1000
-        //   if (timeDiff) {
-        //     this.showShare = true
-        //     this.showXufei = true
-        //   }
-        // }
+      showHome() {
+        this.$router.push({ path: '/user/detail' })
+      },
+      async confirm() {
+        const userInfo = {
+          sex: this.sex,
+          age: this.age,
+          job: this.job,
+          province: this.province,
+          city: this.city,
+          country: this.country,
+        }
+        const res = await api.put(`/user/${cookie('userId')}`, userInfo)
+        if (res.message === 'success') {
+          this.$store.dispatch('setUserInfo', userInfo)
+          this.$router.push({ path: '/user/detail' })
+        }
+      },
+      checkMobile() {
+        if (!(/^1[3|4|5|7|8][0-9]\d{4,8}$/.test(this.phone))) {
+          this.warningText = '不是完整的11位手机号或者正确的手机号前七位!'
+          return false
+        }
+        this.warningText = ''
+        return true
+      },
+      async getVerifyCode() {
+        await api.post('/sms', { phone: this.phone })
+        this.verifyShow = true
+      },
+      async verify() {
+        try {
+          const result = await api.post(`/sms/${this.verifyCode}`, { phone: this.phone })
+          if (result) {
+            this.successText = '绑定手机号成功!'
+            this.verifyShow = false
+          } else {
+            this.warningText = '验证码无效!'
+            return
+          }
+        } catch (err) {
+          console.log(err.message)
+        }
       },
     },
   }
@@ -92,6 +148,8 @@
     .avatar-wrapper
       text-align: center
       .avatar
+        width: 128px
+        height: 128px
         border-radius: 50%
       .nickname
         margin-top: 24px
@@ -100,12 +158,50 @@
         font-dpr(14px)
         font-weight: 700
       .detail-item, .list-title
-        padding: 36px 24px
-        line-height: 32px
+        padding: 24px 24px
+        line-height: 2
         border-bottom: 1px solid rgba(7,17,27,0.1)
-        .info
+        &:last-child
+          border-bottom: 0
+        .title
+          // margin-right: 24px
+        .sex
           float: right
-          &.editable
-            padding: 4px 20px
-            background: #ccc
+          font-size: 0
+          input[type="radio"]+span
+            display: inline-block
+            line-height: 48px
+            width: 80px
+            text-align: center
+            font-dpr(12px)
+            color: rgb(147, 153, 159)
+            border-radius: 2px
+            background-color: rgba(7,17,27,0.1) 
+          input[type="radio"]:checked+span 
+            color: #fff
+            background-color: rgb(147, 153, 159)
+        input[type="text"],input[type="number"]
+          padding: 12px
+          background-color: rgba(7,17,27,0.1)
+        input[type="text"]:focus, input[type="number"]:focus
+          background-color: rgba(7,17,27,0.1)
+        .verify
+          margin-top: 12px
+        .btn_verify
+          padding: 8px
+          font-dpr(12px)
+    .warning, .success
+      padding: 0 24px
+      color: rgb(240,20,20)
+    .btn
+      display: flex
+      margin: 24px
+      .cancel, .confirm
+        flex: 1
+        padding: 16px 0
+        text-align: center
+        border: 1px solid rgba(7, 17, 27, 0.3)
+      .confirm
+        margin-left: 48px
+        background: #f3f5f7       
 </style>
