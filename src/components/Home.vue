@@ -76,20 +76,6 @@
         currentLocation: '北京',
         // restaurantList: [],
         list: [],
-        filter: {
-          scene_id: '',
-          other_id: '',
-          cuisine_id: '',
-          district_id: '',
-          city_id: '',
-          orderby: 'updated_at', // orderby: 'created_at',
-          page: 1,
-          per_page: 50, // 10->30 一次请求30个，然后多次加载
-          order: 'desc', //  order: 'asc',
-          q: '',
-          location: '', // 用户定位信息
-          filter: '',
-        },
         loadingNum: 4, // 每次加载数量
       }
     },

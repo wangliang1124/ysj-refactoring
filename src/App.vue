@@ -31,6 +31,11 @@
     methods: {
       async initData() {
         try {
+          if (this.$store.getters.restaurantList && this.$store.getters.restaurantList.length) {
+            console.log('=================app getter restaurantList===================')
+            console.log(this.$store.getters.restaurantList)
+            return
+          }
           const specialty = await api.get('/specialty')
           console.log('================app-初始化餐厅数据===================')
           if (specialty) {

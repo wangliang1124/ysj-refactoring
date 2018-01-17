@@ -100,7 +100,8 @@
         height: 80px
         line-height: 80px
         color: #550055
-        .router-link-active
+        a, .router-link-active
+          display: block
           text-decoration: none
       .current
         border-bottom: 1px solid #550055

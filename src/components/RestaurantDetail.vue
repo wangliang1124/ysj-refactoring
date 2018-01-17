@@ -44,9 +44,9 @@
       <div class="notice"></div>
       <split></split>
       <div class="ranking">
-        <span class="item"><a href="/ranklist/cook">主厨排名&nbsp;&nbsp; {{this.chefIndex}}</a></span>
-        <span class="item"><a href="/ranklist/month">餐厅月排名&nbsp;&nbsp; {{this.monthIndex}}</a></span>
-        <span class="item"><a href="/ranklist/total">餐厅总排名&nbsp;&nbsp; {{this.totalIndex}}</a></span>
+        <span class="rank-item"><a href="/ranklist/cook">主厨排名 <em>{{this.chefIndex}}</em></a></span>
+        <span class="rank-item"><a href="/ranklist/month">餐厅月排名 <em>{{this.monthIndex}}</em></a></span>
+        <span class="rank-item"><a href="/ranklist/total">餐厅总排名 <em>{{this.totalIndex}}</em></a></span>
       </div>
       <split></split>
       <template  v-if="chefTalk">
@@ -86,43 +86,29 @@
     },
     data() {
       return {
-        restaurant: {},
         recommendRestaurants: [],
-        imgList: [],
         detail: {},
         useRule: '',
         chefTalk: '',
+        chefIndex: 0, // 厨师排行
+        monthIndex: 0, // 餐厅月排行
+        totalIndex: 0, // 餐厅总排行
       }
     },
-    updated() {
-      const { restaurantList } = this.$store.getters
-      this.restaurant = restaurantList.find(item => item.id === parseInt(this.$route.params.id, 10))
-      this.imgList = this.restaurant.photos
-      // if (this.restaurant.recommendID) {
-      //   this.recommendRestaurants = restaurantList.filter((item) => {
-      //     const arr = JSON.parse(this.restaurant.recommendID)
-      //     for (let i = 0; i < arr.length; i += 1) {
-      //       if (item.id === arr[i]) {
-      //         return true
-      //       }
-      //     }
-      //     return false
-      //   })
-      // }
-
-      // },
+    computed: {
+      restaurantList() {
+        return this.$store.getters.restaurantList
+      },
+      restaurant() {
+        return this.restaurantList.find(item => item.id === parseInt(this.$route.params.id, 10)) || {}
+      },
+      imgList() {
+        return this.restaurant.photos || []
+      },
     },
-    // computed: {
-    //   detailStyle() {
-    //     return {
-    //       lineHeight: 2,
-    //       textAlign: 'center',
-    //       color: 'rgb(77, 85, 93)',
-    //     }
-    //   },
-    // },
     created() {
       this.init()
+      this.initRankData()
     },
     methods: {
       async init() {
@@ -131,6 +117,18 @@
         this.useRule = res.data.rule_markdown_url
         this.chefTalk = res.data.shika_markdown_url || res.data.shitan_markdown_url
         console.log('=========初始化数据=======')
+      },
+      async initRankData() {
+        const res = await api.get('/collect/ranklist')
+        const res2 = await api.get('/specialty/getcooktop11')
+        const total = res.data[0]
+        const month = res.data[1]
+        const cooktop11 = res2.data
+        const id = parseInt(this.$route.params.id, 10)
+        this.chefIndex = cooktop11.findIndex(item => item.id === id) + 1
+        this.totalIndex = total.findIndex(item => item.id === id) + 1
+        this.monthIndex = month.findIndex(item => item.id === id) + 1
+        console.log('=========初始化排行榜数据=======' + this.chefIndex)
       },
       back() {
         this.$router.back()
@@ -241,15 +239,20 @@
       .ranking 
         display: flex
         margin: 0 24px
-      .ranking .item 
+      .ranking .rank-item 
         flex: 1
         margin: 20px 0
         text-align: left
         color: rgb(147,153,159)
         border-right: 1px solid rgba(7, 17, 27, 0.1)
-      .ranking .item:nth-child(2) 
+        a
+          display: block
+          width: 100%
+          height: 100%
+          text-decoration: none
+      .ranking .rank-item:nth-child(2) 
         text-align: center
-      .ranking .item:last-child
+      .ranking .rank-item:last-child
         border-right: 0
         text-align: right
       .chef-talk

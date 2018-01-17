@@ -2,7 +2,7 @@
   <div class="content-wrapper">
     <div class="content-cook-item" v-for='(item, index) in cookTop11' :key='index'>
       <div class="cover">
-        <router-link :to="{ name:'detail', params:{id: item.id}}">
+        <router-link :to="{ name:'detail', params:{id: item.id}}" class="router-link">
           <span class="num">No.{{index+1}}</span>
           <img :src="item.cook_avatar" :alt="item.restaurant.name">
         </router-link>
@@ -48,10 +48,19 @@
       flex: 0 0 48% 
       width: 48%
       .cover
-        a
+        .router-link
+          position: relative
+          display: inline-block
+          width: 100%
+          height: 0
+          padding-top: 100% /*黑魔法*/
           img
-           width: 100%
-           height: 100%
+            position: absolute
+            top: 0
+            left: 0
+            width: 100%
+            height: 100%
+            object-fit: cover
           .num
             position: absolute
             display: inline-block

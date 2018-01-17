@@ -4,8 +4,8 @@
     <template v-if="!!rankList.length">
       <div class="content-item" v-for='(item,index) in rankList' :key='index'>
         <div class="cover">
-          <span class="num">No.{{index+1}}</span>
           <router-link :to="{name:'detail', params:{id: item.id}}">
+            <span class="num">No.{{index+1}}</span>
             <img :src="item.specialty.restaurant.cover" :alt="item.specialty.restaurant.name">
           </router-link>
         </div>
@@ -105,23 +105,33 @@
       padding: 24px 0
       border-bottom: 1px solid rgba(7, 17, 27, 0.1)
       .cover
-        position: relative
         flex: 0 0 240px
-        width: 240px
-        img
-          width: 240px
-          height: 160px
-        .num
-          position: absolute
-          top: 12px
-          width: 80px
-          padding: 4px
-          border-top-right-radius: 4px
-          border-bottom-right-radius: 4px
-          font-dpr(12px)
-          text-align: center
-          color: #fff
-          background-color: #480a4d 
+        width: 100%
+        a
+          position: relative
+          display: inline-block
+          width: 100%
+          height: 0
+          padding-top: 66% /*黑魔法*/
+          img
+            position: absolute
+            top: 0
+            left: 0
+            width: 100%
+            height: 100%
+            // border: 1px solid rgba(7, 17, 27, 0.1)
+            object-fit: cover
+          .num
+            position: absolute
+            top: 12px
+            width: 80px
+            padding: 4px
+            border-top-right-radius: 4px
+            border-bottom-right-radius: 4px
+            font-dpr(12px)
+            text-align: center
+            color: #fff
+            background-color: #480a4d 
       .content-text
         flex: 1
         margin-left: 24px
