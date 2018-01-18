@@ -1,7 +1,7 @@
 <template>
   <div class="restaurant-cover">
     <div class="cover">
-      <router-link :to="{ name: 'detail', params: {id: restaurant.id}}">
+      <router-link :to="{ name: 'detail', params: {id: id}}">
         <img :src="restaurant.cover" class="img">
       </router-link>
     </div>
@@ -25,10 +25,11 @@ export default {
       type: Object,
     },
   },
-  data() {
-    return {
-
-    }
+  computed: {
+    id() {
+      console.log(this.restaurant)
+      return parseInt(this.restaurant.id, 10)
+    },
   },
 }
 </script>

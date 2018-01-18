@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-list">
+  <div class="goods-list"  ref="goods">
     <ul>
       <router-link tag="li" class="goods-item border-1px" 
         v-for="(item,index) in goods" 
@@ -25,6 +25,7 @@
 <script>
   /* eslint-disable */
   import wxconfig from 'utils/wx'
+  import BetterScroll from 'better-scroll'
   import CartControl from './CartControl'
 
   export default {
@@ -40,6 +41,16 @@
     created() {
       console.log('=============goods  list  created================');
       wxconfig.initWx(); // 获取微信签名
+    },
+    mounted() {
+      this.$nextTick(() => {
+        if (!this.goodsScroll) {
+          console.log('-------------goods mounted-------------------');
+          this.goodsScroll = new BetterScroll(this.$refs.goods, { click: true });
+        } else {
+          this.goodsScroll.refresh();
+        }
+      });
     },
   };
 </script>

@@ -29,22 +29,21 @@
       <div class="content-wrapper">
         <div class="tabs">
           <ul class="tab-list">
-            <li class="tab-item"><router-link :to="{path:'/'}">综合排序</router-link></li>
-            <li class="tab-item"><router-link :to="{path:'/list/2'}">好评优先</router-link></li>
-            <li class="tab-item"><router-link :to="{path:'/list/3'}">距离最近</router-link></li>
-            <li class="tab-item"><router-link :to="{path:'/custom'}">筛选</router-link></li>
-            <li class="tab-item"><router-link :to="{path:'/goods'}">优品</router-link></li>
+            <li class="tab-item"><router-link class="router-link" :to="{path:'/'}">综合排序</router-link></li>
+            <li class="tab-item"><router-link class="router-link" :to="{path:'/list/2'}">好评优先</router-link></li>
+            <li class="tab-item"><router-link class="router-link" :to="{path:'/list/3'}">距离最近</router-link></li>
+            <li class="tab-item"><router-link class="router-link" :to="{path:'/custom'}">筛选</router-link></li>
+            <li class="tab-item"><router-link class="router-link new" :to="{path:'/goods'}">优品</router-link></li>
           </ul>
         </div>
         <div class="content">
+          <div v-if="restaurantList.length === 0" class="loading">
+            <img src="../assets/img/loading.gif" width="54" height="54">
+          </div>
           <!-- <restaurant-list :restaurantList="restaurantList"></restaurant-list> -->
           <router-view :restaurantList="restaurantList"></router-view>
         </div>
       </div>
-      <div class="footer">
-        <div class="sticky"></div>
-      </div>
-      <!-- <search></search> -->
     </div>
   </div>
 </template>
@@ -74,35 +73,17 @@
         bannerList: [],
         isShowBanner: true,
         currentLocation: '北京',
-        // restaurantList: [],
-        list: [],
-        loadingNum: 4, // 每次加载数量
       }
     },
     computed: {
       restaurantList() {
-        return this.$store.getters.restaurantList
-      },
-      listOrderByPrice() { // 按价格排序
-        // const list = this.restaurantList.concat() // 复制array，避免引用
-        return this.restaurantList.sort((a, b) => b.price - a.price)
-      },
-      listOrderByDistance() { // 距离
-        // const list = this.restaurantList.concat()
-        return this.restaurantListlist.sort((a, b) => a.distance - b.distance)
+        return this.$store.getters.restaurantList // filter(item => item.city === this.currentCity)
       },
     },
     created() {
       console.log('============Home created================')
       this.initData()
-      // this.restaurantList = this.$store.getters.restaurantList
-      // console.log(this.restaurantList)
-      this.currentCity = window.localStorage.getItem('currentCity')
-      this.currentIndex = this.cityList.findIndex(item => item === this.currentCity)
     },
-    // updated() {
-    //   this.restaurantList = this.$store.getters.restaurantList
-    // },
     beforeRouteUpdate(to, from, next) {
       const { id } = to.params
       console.log('=====beforeRouteUpdate=====' + id)
@@ -130,6 +111,9 @@
         } catch (err) {
           console.log(`初始化数据错误:${err.message}`)
         }
+        // 初始化城市数据
+        this.currentCity = window.localStorage.getItem('currentCity')
+        this.currentIndex = this.cityList.findIndex(item => item === this.currentCity)
       },
       showCity() {
         this.cityShow = !this.cityShow
@@ -166,7 +150,6 @@
       // },
     },
   }
-
 </script>
 <style lang="stylus" scoped>
   @import '../assets/stylus/mixin.styl'
@@ -279,13 +262,25 @@
               flex: 1
               // align-self: center
               text-align: center
-              a
+              .router-link
+                position: relative
                 display: block
                 text-decoration: none
                 color: rgb(77, 85, 93)
+                &.new:after
+                  position: absolute
+                  top: -18px
+                  right: 12px
+                  content: 'new'  
+                  color: rgb(240, 20, 20)
+                  font-dpr(10px)
+                  font-style: italic
                 &.router-link-exact-active
-                  // text-decoration: none
                   color: rgb(240, 20, 20)
         .content
           padding: 18px
+          .loading
+            text-align: center
+            line-height: 2
+            font-dpr(16px)
 </style>

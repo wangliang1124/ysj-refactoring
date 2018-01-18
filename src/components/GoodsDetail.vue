@@ -118,7 +118,7 @@
       console.log('===updated===');
       console.log(this.SKU);
       if (!this.goodsDetailScroll) {
-        this.goodsDetailScroll = new BetterScroll(this.$refs.goodsDetail, { click: false });
+        this.goodsDetailScroll = new BetterScroll(this.$refs.goodsDetail, { click: true });
       } else {
         this.goodsDetailScroll.refresh();
       }

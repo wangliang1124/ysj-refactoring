@@ -1,6 +1,6 @@
 <template>
   <div class="goods">
-    <div class="goods-wrapper" ref="goods">
+    <div class="goods-wrapper">
       <!-- <keep-alive> -->
         <router-view :goods="goods"></router-view>
       <!-- </keep-alive> -->
@@ -53,20 +53,12 @@
   /* eslint-disable */
   import wxconfig from 'utils/wx'
   import api from 'utils/api'
-  // import { XDialog, XButton, Group, Cell, Scroller, Actionsheet } from 'vux'
-  import BetterScroll from 'better-scroll'
   import CartControl from './CartControl'
 
   export default {
     name: 'Goods',
     components: {
       CartControl,
-      // XDialog,
-      // XButton,
-      // Group,
-      // Cell,
-      // Scroller,
-      // Actionsheet,
     },
     data() {
       return {
@@ -136,25 +128,11 @@
         this.hideList();
         return false;
       },
-      // goodsItem() {
-      //   console.log('===computed====' + Date.now());
-      //   return this.goods.find(item => item.id === this.cardId);
-      // },
     },
     created() {
       console.log('=====goods created======');
       this.initData();
       wxconfig.initWx(); // 获取微信签名
-    },
-    mounted() {
-      this.$nextTick(() => {
-        if (!this.goodsScroll) {
-          console.log('-------------goods mounted-------------------');
-          this.goodsScroll = new BetterScroll(this.$refs.goods, { click: true });
-        } else {
-          this.goodsScroll.refresh();
-        }
-      });
     },
     methods: {
       async initData() {
