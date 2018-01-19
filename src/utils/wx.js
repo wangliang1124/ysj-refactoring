@@ -5,23 +5,6 @@
 import api from './api'
 import store from '../vuex'
 
-// const getMinPlace = (list, res) => {
-//   let minD = -1
-//   let minPlace = {}
-//   list.forEach((item) => {
-//     const current = location.getDistance(
-//       item.location_x,
-//       item.location_y,
-//       res.latitude,
-//       res.longitude,
-//     )
-//     if (current < minD || minD === -1) {
-//       minD = current
-//       minPlace = item
-//     }
-//   })
-//   return minPlace
-// }
 const wx = window.jWeixin
 const wxAPI = {
   async initWx() {
