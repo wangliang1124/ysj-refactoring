@@ -103,7 +103,7 @@ export default {
 
 .flexible-test .item-section {
   min-height: 100%
-  background-color: #ee0a3b
+  // background-color: #ee0a3b
   position: relative;
   font-dpr(12px)
 }
@@ -113,7 +113,8 @@ export default {
 }
 
 .item-section_header img {
-  width: 10rem
+  // width: 10rem
+  width: 750px
 }
 
 .item-section ul {

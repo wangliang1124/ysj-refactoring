@@ -4,6 +4,9 @@ font-dpr($font-size)
     font-size: $font-size * 2;  /*no*/
   [data-dpr="3"] &
     font-size: $font-size * 3; /*no*/
+/*或者利用postcss-px2rem插件*/
+fontDpr($font-size)
+  font-size: $font-size * 2 /*px*/
     
 border-1px($color)
   position: relative
