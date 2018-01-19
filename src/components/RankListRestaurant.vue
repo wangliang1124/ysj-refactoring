@@ -29,7 +29,7 @@
   /* eslint-disable */
   import Rating from 'components/Rating'
   import { mapGetters } from 'vuex'
-  import util from 'utils/location'
+  import distance from 'utils/distance'
 
   export default {
     name: 'TotalMonth',
@@ -68,7 +68,7 @@
           if (!loY || !lat) {
             return '未知';
           }
-          return `${(Number(util.getDistance(loY, loX, lat, lng)) / 1000).toFixed(2)}km`;
+          return `${(Number(distance.getDistance(loY, loX, lat, lng)) / 1000).toFixed(2)}km`;
         }
         return '';
       },

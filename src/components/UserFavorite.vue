@@ -6,7 +6,7 @@
 <script>
 import api from 'utils/api'
 import RestaurantList from 'components/RestaurantList'
-import util from 'utils/location'
+import distance from 'utils/distance'
 
 export default {
   name: 'UserFavorite',
@@ -42,7 +42,7 @@ export default {
       const location = JSON.parse(window.localStorage.getItem('location'))
       if (location) {
         const { latitude: lat, longitude: lng } = location
-        return Math.round(util.getDistance(loY, loX, lat, lng) / 100) / 10
+        return Math.round(distance.getDistance(loY, loX, lat, lng) / 100) / 10
       }
       return '未知'
     },

@@ -16,8 +16,8 @@
         </div>
         <transition name="drop">
           <ul class="city-list" v-show="cityShow">
-            <li class="city-item" v-for="(city,index) in cityList" @click.stop="selectCity(index)">
-              <span class="city" :class="{current: index===currentIndex }">{{city}}</span>
+            <li class="city-item" v-for="(item,index) in cityList" @click.stop="selectCity(index)">
+              <span class="city" :class="{current: index===currentIndex }">{{item.city}}</span>
             </li>
           </ul>
         </transition>
@@ -44,6 +44,15 @@
           <router-view :restaurantList="restaurantList"></router-view>
         </div>
       </div>
+      <div class="locate-city" v-show="locateShow">
+        <div class="content">
+          <h2 class="title">定位您在<em style="color:rgb(240,20,20)">{{currentLocation.city}}</em>附近</h2>
+          <span class="text">是否切换到该城市进行搜索</span>
+        </div>
+        <div class="btn-wrapper">
+          <span class="btn" @click="locateShow=false">取消</span><span class="btn current" @click="confirmLocate">确定</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -52,9 +61,7 @@
   import Swiper from 'components/Swiper'
   // import Search from 'components/Search'
   import api from 'utils/api'
-
-  // import util from 'utils/location'
-  // import wx from 'utils/wx'
+  import distance from 'utils/distance'
 
   export default {
     name: 'Home',
@@ -66,13 +73,14 @@
     data() {
       return {
         currentCity: '北京',
-        cityList: ['北京', '上海'],
+        cityList: [],
         cityShow: false,
         currentIndex: 0,
         searchShow: false,
         bannerList: [],
         isShowBanner: true,
         currentLocation: '北京',
+        locateShow: false,
       }
     },
     computed: {
@@ -104,7 +112,7 @@
       async initData() {
         try {
           const area = await api.get('/area')
-          this.cityList = area.data.map(item => item.city)
+          this.cityList = area.data // area.data.map(item => item.city)
 
           const banners = await api.get('/banner')
           this.bannerList = banners.data.rows
@@ -112,8 +120,30 @@
           console.log(`初始化数据错误:${err.message}`)
         }
         // 初始化城市数据
-        this.currentCity = window.localStorage.getItem('currentCity')
-        this.currentIndex = this.cityList.findIndex(item => item === this.currentCity)
+        const curCity = window.localStorage.getItem('currentCity')
+        if (curCity) { this.currentCity = curCity }
+        this.currentIndex = this.cityList.findIndex(item => item.city === this.currentCity)
+        // 定位当前所在城市
+        this.locateCurrentCity(this.cityList)
+      },
+      locateCurrentCity(cityList) {
+        let minDis = 0
+        let city = {}
+        const coord = this.$store.getters.coordinates
+        cityList.forEach((item) => { // 获取当前最近城市
+          // eslint-disable-next-line
+          const dis = distance.getDistance(item.location_x, item.location_y, coord.latitude, coord.longitude)
+          if (dis <= minDis || minDis === 0) { minDis = dis; city = item }
+        })
+        this.currentLocation = city
+        if (this.currentLocation.city !== this.currentCity) {
+          this.locateShow = true
+        }
+      },
+      confirmLocate() {
+        this.locateShow = false
+        this.currentCity = this.currentLocation.city
+        window.localStorage.setItem('currentCity', this.currentCity)
       },
       showCity() {
         this.cityShow = !this.cityShow
@@ -122,7 +152,8 @@
         this.cityShow = false
       },
       selectCity(index) {
-        this.currentCity = this.cityList[index]
+        console.log(this.cityList[index])
+        this.currentCity = this.cityList[index].city
         window.localStorage.setItem('currentCity', this.currentCity)
         this.cityShow = false
         this.currentIndex = index
@@ -130,24 +161,6 @@
       showSearch() {
         this.$router.push({ path: '/search' })
       },
-      // locate() { // 定位
-      //   const self = this
-      //   wxConfig.getLocation(list, (res, currentPlace) => {
-      //     const minPlace = res
-      //     this.filter.location = `${currentPlace.longitude},${currentPlace.latitude}`;
-      //     if (!locationId || `${minPlace.id}` !== `${locationId}`) {
-      //       const { id, city } = minPlace;
-      //       this.$vux.confirm.show({
-      //         title: `定位您在${city}附近`,
-      //         content: '是否切换到该城市进行搜索',
-      //         onConfirm() {
-      //           // localStorage.setItem('current_location', id);
-      //           self.choosePlace(id)
-      //         },
-      //       })
-      //     }
-      //   })
-      // },
     },
   }
 </script>
@@ -283,4 +296,32 @@
             text-align: center
             line-height: 2
             font-dpr(16px)
+      .locate-city
+        position: fixed
+        top: 50%
+        left: 50%
+        width: 80%
+        // height: 25%
+        text-align: center
+        transform: translate(-50%, -50%)
+        border-radius: 4px
+        background: #fff
+        .content
+          padding: 24px 48px 60px 48px 
+          line-height: 2 
+          .title
+            font-dpr(14px)
+          .text
+            color: rgb(147, 153, 159)
+        .btn-wrapper
+          width: 100%
+          line-height: 80px
+          border-top: 1px solid rgba(7, 17, 27, 0.1)
+          .btn
+            display: inline-block
+            width: 49%
+            &.btn:first-child
+              border-right: 1px solid rgba(7, 17, 27, 0.1)
+            &.current
+              color: rgb(240, 20, 20)
 </style>

@@ -16,7 +16,7 @@ const state = {
     id: cookie('token') || '',
     user_id: cookie('uuid') || '',
   },
-  location: {
+  coordinates: {
     lat: '', // 纬度
     lng: '', // 经度
   },
@@ -30,7 +30,7 @@ const getters = {
   token: s => s.token,
   userInfo: s => s.userInfo,
   vipInfo: s => s.vipInfo,
-  location: s => s.location,
+  coordinates: s => s.coordinates,
   restaurantList: s => s.restaurantList,
   cookTop11: s => s.cookTop11,
   rankListMonth: s => s.rankListMonth,
@@ -51,8 +51,8 @@ const actions = {
   editUserInfo({ commit }, d) {
     commit('EDIT_USER_INFO', d)
   },
-  setLocation({ commit }, d) {
-    commit('SET_LOCATION', d)
+  setCoordinates({ commit }, d) {
+    commit('SET_COORDINATES', d)
   },
   setRestaurantList({ commit }, d) {
     commit('SET_RESTAURANTLIST', d)
@@ -96,8 +96,8 @@ const mutations = {
       ...d,
     }
   },
-  SET_LOCATION(s, d) {
-    s.location = {
+  SET_COORDINATES(s, d) {
+    s.coordinates = {
       lat: d.latitude,
       lng: d.longitude,
     }

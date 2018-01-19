@@ -8,7 +8,7 @@
 <script type="text/javascript">
   import wx from 'utils/wx'
   import api from 'utils/api'
-  import util from 'utils/location'
+  import distance from 'utils/distance'
 
   export default {
     name: 'app',
@@ -18,15 +18,15 @@
       }
     },
     computed: {
-      location() {
-        return this.$store.getters.location
+      coordinates() {
+        return this.$store.getters.coordinates
       },
     },
     created() {
       console.log('===========App created================')
       this.initData()
       wx.initWx()
-      wx.getLocation()
+      wx.getCoordinates()
     },
     methods: {
       async initData() {
@@ -75,7 +75,7 @@
         // const location = store.getLocation()
         if (this.location) {
           const { latitude: lat, longitude: lng } = this.location
-          return Math.round(util.getDistance(loY, loX, lat, lng) / 100) / 10
+          return Math.round(distance.getDistance(loY, loX, lat, lng) / 100) / 10
         }
         return '未知'
       },

@@ -48,19 +48,19 @@ const wxAPI = {
     })
     console.log('获得wx签名!')
   },
-  getLocation() {
+  getCoordinates() { // 获取当前位置的坐标，返回值是{longtitude, latitude}
     wx.ready(() => {
       wx.getLocation({
         type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
         success(res) {
           // window.localStorage.setItem('location', JSON.stringify(res))
-          store.dispatch('setLocation', res)
+          store.dispatch('setCoordinates', res)
           // callback(getMinPlace(list, res), res)
         },
       })
     })
   },
-  getAddress(callback) {
+  getAddress(callback) { // 用于付款时获取用户邮寄地址
     wx.ready(() => {
       wx.openAddress({
         success(address) {
