@@ -103,9 +103,11 @@ export default {
 
 .flexible-test .item-section {
   min-height: 100%
-  background-color: #ee0a3b
+  width:100%
+  overflow: hidden
+  // background-color: #ee0a3b
   position: relative;
-  font-dpr(12px)
+  font-dpr(14px)
 }
 
 .item-section_header {
@@ -113,7 +115,8 @@ export default {
 }
 
 .item-section_header img {
-  width: 10rem
+  // width: 10rem
+  width: 750px; 
 }
 
 .item-section ul {
@@ -155,6 +158,7 @@ export default {
 .flag .flag-title a {
   color: #333;
   line-height: 1.25;
+  font-dpr(14px)
   overflow: hidden;
   -webkit-line-clamp: 2;
   line-clamp: 2;
