@@ -72,3 +72,13 @@
       left: 0
       width: 100%
       height: 100%
+
+## 引入的库
+
+基础： vue + vue-router + vuex
+alloyfinger： 腾讯的手势库
+axios： Promise based HTTP client for the browser and node.js，用户异步请求数据
+better-scroll： 是一款重点解决移动端各种滚动场景需求的插件
+cookiejs：操作cookie
+fastclick： 解决移动端click事件300ms延迟 https://www.jianshu.com/p/16d3e4f9b2a9
+qs： 用于序列化url参数
