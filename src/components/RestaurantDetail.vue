@@ -74,7 +74,7 @@
   import api from 'utils/api'
 
   export default {
-    name: 'RestaurantList',
+    name: 'RestaurantDetail',
     // props: {
     //   restaurantList: {
     //     type: Array,
@@ -96,11 +96,12 @@
       }
     },
     computed: {
-      restaurantList() {
-        return this.$store.getters.restaurantList
-      },
-      restaurant() {
-        return this.restaurantList.find(item => item.id === parseInt(this.$route.params.id, 10)) || {}
+      // restaurantList() {
+      //   return this.$store.getters.restaurantList
+      // },
+      restaurant() { // 初始化数据
+        const { restaurantList } = this.$store.getters
+        return restaurantList.find(item => item.id === parseInt(this.$route.params.id, 10)) || {}
       },
       imgList() {
         return this.restaurant.photos || []
