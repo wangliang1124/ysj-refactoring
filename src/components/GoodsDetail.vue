@@ -2,7 +2,6 @@
   <div class="goods-detail" :class="{over: addCartShow}" ref="goodsDetail">
     <div class="detail-wrapper" v-if="SKU">
       <div class="header">
-<!--         <router-link :to="{path: '/goods', params: {goods}}" class="back"><i class="iconfont icon-arrow-right"></i></router-link> -->
         <span class="back" @click="backToList"><i class="iconfont icon-arrow-right"></i></span>
         <swiper :imageList="imgList"></swiper>
         <div class="title-wrapper">
@@ -13,7 +12,7 @@
         <div class="info">
           <span class="delivery">运费：¥{{SKU.delivery}}</span><span class="sell-count">销量：99份</span><span class="rating">好评率100%</span>
         </div>
-        <div class="do-select" @click="showAddCart">
+        <div class="do-select" @click="showChooseItem">
           <span>{{selected ?'已选择:':'请选择规格'}}</span>
           <span class="selected" v-if="!!SKU.card_tags">{{ SKU.card_tags[0].tag }}</span>
           <i class="iconfont icon-arrow-right"></i>
@@ -56,8 +55,9 @@
           </div>
         </div>
       </div>
-      <div class="musk" @click="hideAddCart"></div>
+      <div class="musk" @touchstart="hideAddCart" v-show="goodsShow"></div>
     </div>
+    <shopcart :goods="goods" @addCart="onAddCart"></shopcart>
   </div>
 </template>
 <script>
@@ -67,6 +67,7 @@
   import Swiper from './Swiper';
   import Split from './Split';
   import CartControl from './CartControl';
+  import Shopcart from './Shopcart'
   // import api from '@/utils/api';
 
   export default {
@@ -75,6 +76,7 @@
       Swiper,
       Split,
       CartControl,
+      Shopcart,
     },
     props: {
       goods: {
@@ -86,17 +88,18 @@
         // imgList: [],
         // goodsItem: {},
         cardId: 0,
-        addCartShow: false,
-        goodsShow: true,
+        addCartShow: true,
+        goodsShow: false,
         selected: false,
       };
     },
     computed: {
       SKU() { // 单个产品条目
-        return this.goods.find(item => item.id === this.cardId) || {};
+        const sku = this.goods.find(item => item.id === this.cardId) || {}
+        return sku
       },
       SPU() {  // 同类产品
-        return this.goods.filter(item => item.name === this.SKU.name);
+        return this.goods.filter(item => item.name === this.SKU.name)
       },
       imgList() {
         if (this.SKU.photos) {
@@ -137,12 +140,35 @@
     },
     methods: {
       addCart(event) {
-        this.$refs.cartControl.add(event);
-        this.addCartShow = false;
+        // this.$refs.cartControl.add(event);
+        if(!this.goodsShow){
+          this.goodsShow = true
+          if(!this.SKU.count){
+            this.$set(this.SKU, 'count', 1)
+          }
+        } else {
+          this.addCartShow = false
+          // this.$refs.cartControl.add(event)
+        }
+        
+        // this.addCartShow = false;
       },
-      showAddCart() {
-        console.log('测试测试');
+      onAddCart(event){
+        if(!this.addCartShow){
+          this.addCartShow = true
+          this.goodsShow = true
+          if(!this.SKU.count){
+            this.$set(this.SKU, 'count', 1)
+          }
+        } else {
+          this.addCartShow = true
+          this.goodsShow = false
+          // this.$refs.cartControl.add(event)
+        }
+      },
+      showChooseItem() {
         this.addCartShow = true;
+        this.goodsShow = true;
         this.cardId = this.$route.params.id;
       },
       selectSpec(id) {
@@ -325,7 +351,7 @@
         width: 100%
         opacity: 1
         backdrop-filter: blur(10px)
-        over-flow: hidden
+        overflow: hidden
         background-color: rgba(7, 17, 27, 0.6)
 </style>
 

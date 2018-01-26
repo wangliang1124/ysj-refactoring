@@ -46,7 +46,12 @@
       this.$nextTick(() => {
         if (!this.goodsScroll) {
           console.log('-------------goods mounted-------------------');
-          this.goodsScroll = new BetterScroll(this.$refs.goods, { click: true });
+          this.goodsScroll = new BetterScroll(this.$refs.goods, { 
+            click: true, 
+            tap: true,
+            preventDefault: false, 
+            preventDefaultException: 'shopcart-content-wrapper',
+          });
         } else {
           this.goodsScroll.refresh();
         }
