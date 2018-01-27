@@ -50,8 +50,10 @@
         </div>
         <div class="list-count">
           <h2 class="title">购买数量:</h2>
-          <div class="control-wrapper">
-            <cart-control :goods="SKU" ref="cartControl"></cart-control>
+          <div class="count-wrapper">
+            <span class="reduce" v-if="count>0" @click.stop="reduceCount">-</span>
+            <span class="count"  v-if="count>0">{{count}}</span>
+            <span class="add" @click.stop="addCount">+</span>
           </div>
         </div>
       </div>
@@ -91,6 +93,7 @@
         addCartShow: true,
         goodsShow: false,
         selected: false,
+        count: 1,
       };
     },
     computed: {
@@ -114,6 +117,19 @@
         return `http://ysj.tcfellow.com:3000${this.SKU.cover}`;
       },
     },
+    watch: {
+      SKU: {
+        handler(){
+          if(!this.SKU.count || this.SKU.count === 0) {
+            this.addCartShow = true
+            this.goodsShow = false
+          } else {
+            this.addCartShow = false
+          }
+        },
+        deep: true
+      }
+    },
     created() {
       wxconfig.initWx(); // 获取微信签名
     },
@@ -135,35 +151,28 @@
     },
     mounted() {
       console.log('==============goods-detail mounted==============');
-      console.log(this.goods);
+      // console.log(this.goods);
       this.cardId = parseInt(this.$route.params.id, 10);
     },
     methods: {
       addCart(event) {
-        // this.$refs.cartControl.add(event);
         if(!this.goodsShow){
           this.goodsShow = true
-          if(!this.SKU.count){
-            this.$set(this.SKU, 'count', 1)
-          }
         } else {
           this.addCartShow = false
-          // this.$refs.cartControl.add(event)
+          if(!this.SKU.count){
+            this.$set(this.SKU, 'count', 0)
+          }
+          this.SKU.count += this.count
         }
-        
-        // this.addCartShow = false;
       },
       onAddCart(event){
         if(!this.addCartShow){
           this.addCartShow = true
           this.goodsShow = true
-          if(!this.SKU.count){
-            this.$set(this.SKU, 'count', 1)
-          }
         } else {
           this.addCartShow = true
           this.goodsShow = false
-          // this.$refs.cartControl.add(event)
         }
       },
       showChooseItem() {
@@ -181,6 +190,12 @@
       },
       backToList() {
         this.$router.push({ path: '/goods' });
+      },
+      reduceCount() {
+        this.count -= 1
+      },
+      addCount() {
+        this.count += 1
       },
     },
   };
@@ -337,11 +352,33 @@
             display: inline-block
             font-dpr(14px)
             color: rgb(7,17,27)
-          .control-wrapper
+          .count-wrapper
             position: absolute
             top: 50%
             right: 0
             transform: translateY(-50%)
+            font-size: 0
+            .reduce, .add
+              display: inline-block
+              width: 48px
+              height: 48px
+              line-height: 40px
+              vertical-align: middle
+              text-align: center
+              // padding: 8px 16px
+              border: 1px solid rgba(7,17,27,0.5)
+              font-dpr(24px)
+              color: rgb(0, 160, 220)
+              background-color: #fff
+            .count
+              margin: 0 24px
+              vertical-align: middle
+              font-dpr(12px)
+              color: rgb(147, 153, 159)
+            // position: absolute
+            // top: 50%
+            // right: 0
+            // transform: translateY(-50%)
       .musk
         position: fixed
         z-index: -10

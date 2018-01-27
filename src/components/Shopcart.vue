@@ -160,6 +160,7 @@
       },
       async pay() {
         /* eslint no-underscore-dangle: 0 */ /* eslint no-alert: 0 */
+        console.log('-----------------')
         if (this.totalPrice <= 0 || this.totalCount <= 0) {
           return;
         }
