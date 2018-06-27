@@ -130,7 +130,7 @@
           return
         }
         this.isShowActive = false
-        console.log('+++++++++++++++++++++++++++++')
+        // console.log('+++++++++++++++++++++++++++++')
         try {
           const res = await api.post('/activation/use', { actCode: this.actCode })
           const vipInfo = res.data
