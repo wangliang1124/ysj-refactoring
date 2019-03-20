@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>玥食记微信登录</title>
+</head>
+
+<body>
+
+</body>
+
+<script>
+function appendParams(params, url) {
+  var baseWithSearch = url.split('#')[0];
+  var hash = url.split('#')[1];
+  for (var i = 0; i < params.length; i++) {
+    if (params[i].value !== undefined) {
+      var newParam = params[i].key + "=" + params[i].value;
+      if (baseWithSearch.indexOf('?') > 0) {
+        var oldParamReg = new RegExp(params[i].key + '=[-\\w]{0,40}', 'g');
+        var lastStr = baseWithSearch.substring(baseWithSearch.length - 1, baseWithSearch.length);
+        if (oldParamReg.test(baseWithSearch)) {
+          baseWithSearch = baseWithSearch.replace(oldParamReg, newParam);
+        } else if (lastStr === '?') {
+          baseWithSearch += newParam;
+        } else {
+          baseWithSearch += "&" + newParam;
+        }
+      } else {
+        baseWithSearch += "?" + newParam;
+      }
+    }
+  }
+
+  if (hash) url = baseWithSearch + '#' + hash;
+  else url = baseWithSearch;
+  return url;
+}
+
+(function () {
+  // 读取query参数
+  var params = {};
+  var pairs = location.search.substring(1).split('&');
+  for (var i = 0; i < pairs.length; i++) {
+    var pos = pairs[i].indexOf('=');
+    if (pos === -1) continue;
+    params[pairs[i].substring(0, pos)] = pairs[i].substring(pos + 1);
+  }
+
+  var code = params.code,
+      inviter_id = params.inviter_id,
+      actCode = params.actCode
+      appid = params.appid,
+      scope = params.scope,
+      state = params.state,
+      backurl = params.backurl,
+      timestamp = +new Date()
+  if (appid && state && backurl) { // 处理用户请求
+    if (localStorage.length >= 100) for (var key in localStorage) if (key.indexOf('key__') !== -1) localStorage.removeItem(key);
+    localStorage.setItem('key__' + timestamp, JSON.stringify(params));
+
+    var url = encodeURIComponent(location.href.split('?')[0]);
+    var _url;
+    switch (state) {
+      case 'appwx': // 手机微信网页授权
+        _url = 'https://open.weixin.qq.com/connect/oauth2/authorize' +
+                        '?appid=' + appid +
+                        '&redirect_uri=' + url +
+                        '&response_type=code' +
+                        '&scope=snsapi_userinfo' +
+                        '&state=' + timestamp +
+                        '#wechat_redirect';
+        break;
+      case 'webwx': // pc微信网页授权
+        _url = 'https://open.weixin.qq.com/connect/qrconnect' +
+                        '?appid=' + appid +
+                        '&redirect_uri=' + url +
+                        '&response_type=code' +
+                        '&scope=snsapi_login' +
+                        '&state=' + timestamp +
+                        '#wechat_redirect';
+        break;
+      case 'weibo': // 微博网页授权
+        _url = 'https://api.weibo.com/oauth2/authorize' +
+                        '?client_id=' + appid +
+                        '&response_type=code' +
+                        '&redirect_uri=' + url +
+                        '&state=' + timestamp +
+                        '#weibo_redirect';
+        break;
+      default:
+        alert('state参数错误');
+    }
+
+    location.replace(_url);
+  } else if (code && state) { // 处理微信微博回调请求
+    var _key = 'key__' + state;
+    var d = JSON.parse(localStorage.getItem(_key));
+    localStorage.removeItem(_key);
+    location.replace(appendParams([
+      { key: 'code', value: code },
+      { key: 'state', value: d.state },
+      { key: 'inviter_id', value: inviter_id},
+      { key: 'actCode', value: actCode}
+    ], decodeURIComponent(d.backurl)));
+  } else {
+    alert('参数丢失');
+  }
+})();
+</script>
+</html>
+
